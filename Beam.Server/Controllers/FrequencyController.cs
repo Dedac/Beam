@@ -16,14 +16,28 @@ namespace Beam.Server.Controllers
         }
 
         [HttpGet("[action]")]
-        public List<FrequencyItem> All()
+        public List<Frequency> All()
         {
-            return _context.Frequencies.Select(r => new FrequencyItem()
+            return GetAll();
+        }
+
+        [HttpPost("[action]")]
+        public List<Frequency> Add([FromBody] Frequency frequency)
+        {
+            _context.Add(new Data.Frequency() { Name = frequency.Name });
+            _context.SaveChanges();
+            return GetAll();
+        }
+
+        private List<Frequency> GetAll()
+        {
+            return _context.Frequencies.Select(r => new Frequency()
             {
                 Id = r.FrequencyId,
                 Name = r.Name,
             }
             ).ToList();
+
         }
     }
 }

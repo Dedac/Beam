@@ -1,15 +1,16 @@
 ﻿@using Beam.Shared
 @page "/fetchdata"
-@inject HttpClient Http
+@inject DataService data
 
-@if (frequencies == null)
+
+@if (data.Frequencies == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
     <ul>
-        @foreach (var frequency in frequencies)
+        @foreach (var frequency in data.Frequencies)
         {
             <li>
                 @frequency.Name
@@ -17,13 +18,21 @@ else
         }
     </ul>
 }
+<input bind=name />
+<button onclick=@(AddFrequencyClick) type="button" class="btn"></button>
 
-@functions {
-FrequencyItem[] frequencies;
-
-protected override async Task OnInitAsync()
+@functions
 {
-    frequencies = await Http.GetJsonAsync<FrequencyItem[]>("api/Frequency/All");
-}
+    private string name = "";
+    protected override void OnInit()
+    {
+        data.UdpatedFrequencies += StateHasChanged;
+        data.GetFrequencies().ConfigureAwait(false);
+    }
 
+    private void AddFrequencyClick()
+    {
+        data.AddFrequency(name).ConfigureAwait(false);
+        name = "";
+    }
 }

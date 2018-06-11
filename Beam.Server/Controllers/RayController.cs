@@ -16,15 +16,14 @@ namespace Beam.Server.Controllers
         }
 
         [HttpGet("[action]")]
-        public List<RayItem> Rays()
+        public List<Ray> Rays()
         {
-            return _context.Rays.Select(r => new RayItem()
+            return _context.Rays.Select(r => new Ray()
             {
                 RayId = r.RayId,
                 Text = r.Text,
                 PrismCount = 0,
                 UserName = "billy"
-
             }
             ).ToList();
         }

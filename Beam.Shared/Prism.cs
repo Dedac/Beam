@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Beam.Shared
 {
-    public class FrequencyItem
+    public class Prism
     {
-        public int Id { get; set; }
-        public string Name { get; set;}
+        public int RayId { get; set; }
+        public int UserId { get; set; }
     }
 }

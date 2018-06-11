@@ -2,44 +2,28 @@
 @page "/fetchdata"
 @inject HttpClient Http
 
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
+@if (frequencies == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <ul>
+        @foreach (var frequency in frequencies)
+        {
+            <li>
+                @frequency.Name
+            </li>
+        }
+    </ul>
 }
 
 @functions {
-    WeatherForecast[] forecasts;
+FrequencyItem[] frequencies;
 
-    protected override async Task OnInitAsync()
-    {
-        forecasts = await Http.GetJsonAsync<WeatherForecast[]>("api/SampleData/WeatherForecasts");
-    }
+protected override async Task OnInitAsync()
+{
+    frequencies = await Http.GetJsonAsync<FrequencyItem[]>("api/Frequency/All");
+}
+
 }

@@ -36,6 +36,7 @@ namespace Beam.Data
     public class User
     {
         public int UserId { get; set; }
+        public string Username { get; set; }
         public List<Ray> Rays { get; set; }
         public List<Prism> Prisms { get; set; }
     }

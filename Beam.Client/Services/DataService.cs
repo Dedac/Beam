@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Blazor;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -9,17 +10,37 @@ namespace Beam.Client.Services
 {
     public class DataService
     {
-        public IReadOnlyList<Frequency> Frequencies { get; private set; } 
-        public IDictionary<int, List<Ray>> RayCollection { get; private set; }
+        private readonly HttpClient http;
+        public IReadOnlyList<Frequency> Frequencies { get; private set; }
+        public IReadOnlyList<Ray> Rays { get; private set; } = new List<Ray>();
         public User CurrentUser { get; set; }
 
-        private readonly HttpClient http;
+        private int? selectedFrequency;
+        public int SelectedFrequency
+        {
+            get
+            {
+                if (!selectedFrequency.HasValue && Frequencies.Count > 0)
+                {
+                    selectedFrequency = Frequencies.First().Id;
+                }
+                return selectedFrequency ?? 0;
+            }
+            set
+            {
+                selectedFrequency = value;
+                GetRays(value).ConfigureAwait(false);
+            }
+        }
+
         public DataService(HttpClient httpInstance)
         {
             http = httpInstance;
+            if (CurrentUser == null) CurrentUser = new User() { Name = "Anon" + new Random().Next(0, 10) };
         }
 
         public event Action UdpatedFrequencies;
+        public event Action UpdatedRays;
 
         public async Task GetFrequencies()
         {
@@ -29,7 +50,8 @@ namespace Beam.Client.Services
 
         public async Task GetRays(int FrequencyId)
         {
-            RayCollection[FrequencyId] = await http.GetJsonAsync<List<Ray>>($"/api/Rays/{FrequencyId}");
+            Rays = new List<Ray>();
+            Rays = await http.GetJsonAsync<List<Ray>>($"/api/Ray/{FrequencyId}");
         }
 
         public async Task AddFrequency(string Name)
@@ -38,19 +60,33 @@ namespace Beam.Client.Services
             UdpatedFrequencies?.Invoke();
         }
 
-        public async Task CreateRay(int FrequencyId, Ray ray)
+        public async Task CreateRay(string text)
         {
-            RayCollection[FrequencyId] = await http.PostJsonAsync<List<Ray>>("/api/Ray/Add", ray);
+            var ray = new Ray()
+            {
+                FrequencyId = selectedFrequency.Value,
+                Text = text,
+                UserId = CurrentUser.Id
+            };
+
+            if (CurrentUser.Id == 0)
+            {
+                await GetOrCreateUser();
+                ray.UserId = CurrentUser.Id;
+            }
+
+            Rays = await http.PostJsonAsync<List<Ray>>("/api/Ray/Add", ray);
+            UpdatedRays?.Invoke();
         }
 
-        public async Task GetUser(string UserName)
+        public async Task GetOrCreateUser(string newName = null)
         {
-            CurrentUser = await http.GetJsonAsync<User>($"api/User/Get/{UserName}");
+            CurrentUser = await http.GetJsonAsync<User>($"api/User/Get/{newName ?? CurrentUser.Name}");
         }
 
         public async Task PrismRay(int RayId, int UserId, int FrequencyId)
         {
-            RayCollection[FrequencyId] = await http.PostJsonAsync<List<Ray>>("/api/Prism/Add", new Prism() { RayId = RayId, UserId = UserId });
+            Rays = await http.PostJsonAsync<List<Ray>>("/api/Prism/Add", new Prism() { RayId = RayId, UserId = UserId });
         }
     }
 }

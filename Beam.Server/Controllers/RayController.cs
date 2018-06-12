@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using Beam.Server.Mappers;
 
 namespace Beam.Server.Controllers
 {
@@ -15,17 +16,24 @@ namespace Beam.Server.Controllers
             _context = context;
         }
 
-        [HttpGet("[action]")]
-        public List<Ray> Rays()
+        [HttpGet("{FrequencyId}")]
+        public List<Ray> Rays(int FrequencyId)
         {
-            return _context.Rays.Select(r => new Ray()
-            {
-                RayId = r.RayId,
-                Text = r.Text,
-                PrismCount = 0,
-                UserName = "billy"
-            }
-            ).ToList();
+            return GetRays(FrequencyId);
+        }
+
+        private List<Ray> GetRays(int FrequencyId)
+        {
+            return _context.Rays.Where(r => r.FrequencyId == FrequencyId)
+                .Select(r => r.ToShared()).ToList();
+        }
+
+        [HttpPost("[action]")]
+        public List<Ray> Add([FromBody] Ray ray)
+        {
+            _context.Add(ray.ToData());
+            _context.SaveChanges();
+            return GetRays(ray.FrequencyId);
         }
 
     }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using Beam.Server.Mappers;
 
 namespace Beam.Server.Controllers
 {
@@ -18,7 +19,7 @@ namespace Beam.Server.Controllers
         [HttpGet("[action]")]
         public List<Frequency> All()
         {
-            return GetAll();
+            return _context.Frequencies.Select(r => r.ToShared()).ToList();
         }
 
         [HttpPost("[action]")]
@@ -26,18 +27,8 @@ namespace Beam.Server.Controllers
         {
             _context.Add(new Data.Frequency() { Name = frequency.Name });
             _context.SaveChanges();
-            return GetAll();
+            return _context.Frequencies.Select(r => r.ToShared()).ToList();
         }
 
-        private List<Frequency> GetAll()
-        {
-            return _context.Frequencies.Select(r => new Frequency()
-            {
-                Id = r.FrequencyId,
-                Name = r.Name,
-            }
-            ).ToList();
-
-        }
     }
 }

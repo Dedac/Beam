@@ -16,6 +16,14 @@ namespace Beam.Server.Controllers
         {
             _context = context;
         }
+        [HttpGet("[action]/{username}")]
+        public List<Ray> PrismRays(string username)
+        {
+            return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
+                .Where(r => r.Prisms.Any(p => p.User.Username == username))
+                .Select(r => r.ToShared()).ToList();
+        }
+
 
         [HttpGet("{FrequencyId}")]
         public List<Ray> Rays(int FrequencyId)

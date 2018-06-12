@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beam.Client", "Beam.Client\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beam.Shared", "Beam.Shared\Beam.Shared.csproj", "{9B38BE84-0E78-44CC-A403-F067EE861AAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beam.Data", "Beam.Data\Beam.Data.csproj", "{55E01C05-C581-4109-B751-825ECB93DBA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beam.Data", "Beam.Data\Beam.Data.csproj", "{55E01C05-C581-4109-B751-825ECB93DBA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

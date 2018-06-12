@@ -1,6 +1,15 @@
-﻿<div class="card">
+﻿@inject DataService data
+<div class="card">
     <div class="card-body">
-        <span class="card-text">"@ray.Text"</span><i>- @ray.UserName</i>
+        <div class="row">
+            <button class="btn btn-outline-secondary col-1" onclick="@(() => data.PrismRay(ray.RayId))">
+                <span class="oi oi-rss"></span>@ray.PrismCount
+            </button>
+            <span class="card-text col-9">"@ray.Text"</span>
+        </div>
+        <div class="row">
+            <NavLink href="@($"User/{ray.UserName}")" class="col-2" ><i>- @ray.UserName</i></NavLink>
+        </div>
     </div>
 </div>
 @functions{

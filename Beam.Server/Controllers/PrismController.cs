@@ -25,8 +25,10 @@ namespace Beam.Server.Controllers
             _context.Add(newPrism);
             _context.SaveChanges();
 
+            var prismRay = _context.Rays.Find(newPrism.RayId);
+
             return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
-                .Where(r => r.FrequencyId == newPrism.Ray.FrequencyId)
+                .Where(r => r.FrequencyId == prismRay.FrequencyId)
                 .Select(r => r.ToShared())
                 .ToList();
         }

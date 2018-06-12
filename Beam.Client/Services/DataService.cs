@@ -85,9 +85,17 @@ namespace Beam.Client.Services
             CurrentUser = await http.GetJsonAsync<User>($"api/User/Get/{newName ?? CurrentUser.Name}");
         }
 
-        public async Task PrismRay(int RayId, int UserId, int FrequencyId)
+        public async Task PrismRay(int RayId)
         {
-            Rays = await http.PostJsonAsync<List<Ray>>("/api/Prism/Add", new Prism() { RayId = RayId, UserId = UserId });
+            if (CurrentUser.Id == 0) await GetOrCreateUser();
+            Rays = await http.PostJsonAsync<List<Ray>>("/api/Prism/Add", new Prism() { RayId = RayId, UserId = CurrentUser.Id });
+            UpdatedRays?.Invoke();
+        }
+
+        public async Task GetUserRays(string username)
+        {
+            Rays = await http.GetJsonAsync<List<Ray>>($"/api/Rays/Prismrays/{username}");
+            UpdatedRays?.Invoke();
         }
     }
 }

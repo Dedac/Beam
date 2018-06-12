@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using Beam.Server.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Beam.Server.Controllers
 {
@@ -24,7 +25,8 @@ namespace Beam.Server.Controllers
 
         private List<Ray> GetRays(int FrequencyId)
         {
-            return _context.Rays.Where(r => r.FrequencyId == FrequencyId)
+            return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
+                .Where(r => r.FrequencyId == FrequencyId)
                 .Select(r => r.ToShared()).ToList();
         }
 

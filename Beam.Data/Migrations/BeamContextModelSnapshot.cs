@@ -105,7 +105,7 @@ namespace Beam.Data.Migrations
                         .HasForeignKey("FrequencyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Beam.Data.User")
+                    b.HasOne("Beam.Data.User", "User")
                         .WithMany("Rays")
                         .HasForeignKey("UserId");
                 });

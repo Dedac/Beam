@@ -24,6 +24,14 @@ namespace Beam.Data
         public List<Ray> Rays { get; set;}
     }
 
+    public class User
+    {
+        public int UserId { get; set; }
+        public string Username { get; set; }
+        public List<Ray> Rays { get; set; }
+        public List<Prism> Prisms { get; set; }
+    }
+
     public class Ray
     {
         public int RayId { get; set; }
@@ -31,14 +39,8 @@ namespace Beam.Data
         public int FrequencyId { get; set; }
         public Frequency Frequency { get; set; }
         public List<Prism> Prisms { get; set; }
-    }
-
-    public class User
-    {
-        public int UserId { get; set; }
-        public string Username { get; set; }
-        public List<Ray> Rays { get; set; }
-        public List<Prism> Prisms { get; set; }
+        public int? UserId { get; set; }
+        public User User { get; set; }
     }
 
     public class Prism

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using Beam.Server.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Beam.Server.Controllers
 {
@@ -24,7 +25,7 @@ namespace Beam.Server.Controllers
             _context.Add(newPrism);
             _context.SaveChanges();
 
-            return _context.Rays
+            return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
                 .Where(r => r.FrequencyId == newPrism.Ray.FrequencyId)
                 .Select(r => r.ToShared())
                 .ToList();
@@ -39,7 +40,7 @@ namespace Beam.Server.Controllers
             
             _context.SaveChanges();
 
-            return _context.Rays
+            return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
                 .Where(r => r.FrequencyId == frequencyId)
                 .Select(r => r.ToShared())
                 .ToList();

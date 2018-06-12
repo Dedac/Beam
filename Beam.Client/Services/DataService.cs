@@ -52,6 +52,7 @@ namespace Beam.Client.Services
         {
             Rays = new List<Ray>();
             Rays = await http.GetJsonAsync<List<Ray>>($"/api/Ray/{FrequencyId}");
+            UpdatedRays?.Invoke();
         }
 
         public async Task AddFrequency(string Name)

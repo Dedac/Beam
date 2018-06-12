@@ -25,7 +25,8 @@ namespace Beam.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Username = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

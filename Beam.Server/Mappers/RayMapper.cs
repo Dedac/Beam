@@ -9,8 +9,9 @@
                 RayId = r.RayId,
                 Text = r.Text,
                 FrequencyId = r.FrequencyId,
-                PrismCount = 0,
-                UserName = "billy"
+                PrismCount = r.Prisms.Count,
+                UserId = r.UserId ?? 0,
+                UserName = r.User?.Username ?? "[missing]"
             };
         }
         public static Data.Ray ToData(this Shared.Ray r)
@@ -19,7 +20,8 @@
             {
                 RayId = r.RayId,
                 Text = r.Text,
-                FrequencyId = r.FrequencyId
+                FrequencyId = r.FrequencyId,
+                UserId = r.UserId,
             };
         }
     }

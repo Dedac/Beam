@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Beam.Data.Migrations
 {
     [DbContext(typeof(BeamContext))]
-    [Migration("20180611032646_InitialCreate")]
+    [Migration("20180612032510_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,6 +80,8 @@ namespace Beam.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Username");
+
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
@@ -105,7 +107,7 @@ namespace Beam.Data.Migrations
                         .HasForeignKey("FrequencyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Beam.Data.User")
+                    b.HasOne("Beam.Data.User", "User")
                         .WithMany("Rays")
                         .HasForeignKey("UserId");
                 });

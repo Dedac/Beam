@@ -1,14 +1,14 @@
 ﻿@inject DataService data
 <div class="card">
     <div class="card-body">
-        <div class="row">
+        <div class="row-fluid">
             <button class="btn btn-outline-secondary col-1" onclick="@(() => data.PrismRay(ray.RayId))">
                 <span class="oi oi-rss"></span>@ray.PrismCount
             </button>
             <span class="card-text col-9">"@ray.Text"</span>
         </div>
-        <div class="row">
-            <NavLink href="@($"User/{ray.UserName}")" class="col-2" ><i>- @ray.UserName</i></NavLink>
+        <div class="row-fluid">
+            <NavLink href="@($"User/{ray.UserName}")" class="col-2 float-right" ><i>- @ray.UserName</i></NavLink>
         </div>
     </div>
 </div>

@@ -16,23 +16,23 @@
     <div class="input-group">
         <input bind=name placeholder="New Frequency" class="form-control" />
         <div class="input-group-append">
-            <button onclick=@(AddFrequencyClick) type="button" class="btn btn-outline-secondary"><span class="oi oi-plus"></span></button>
+            <button onclick="@AddFrequencyClick" type="button" class="btn btn-outline-secondary"><span class="oi oi-plus"></span></button>
         </div>
     </div>
 </li>
 
 @functions
 {
-private string name = "";
-protected override void OnInit()
-{
-    data.UdpatedFrequencies += StateHasChanged;
-    data.GetFrequencies().ConfigureAwait(false);
-}
+    private string name = "";
+    protected override void OnInit()
+    {
+        data.UdpatedFrequencies += StateHasChanged;
+        data.GetFrequencies().ConfigureAwait(false);
+    }
 
-private void AddFrequencyClick()
-{
-    data.AddFrequency(name).ConfigureAwait(false);
-    name = "";
-}
+    void AddFrequencyClick()
+    {
+        data.AddFrequency(name).ConfigureAwait(false);
+        name = "";
+    }
 }

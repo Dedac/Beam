@@ -35,9 +35,9 @@
         data.SelectedFrequency = Int32.Parse(Id);
     }
 
-    void CastRay()
+    async Task CastRay()
     {
-        data.CreateRay(newRayText).ConfigureAwait(false);
+        await data.CreateRay(newRayText);
         newRayText = "";
     }
 }

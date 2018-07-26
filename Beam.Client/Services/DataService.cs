@@ -99,10 +99,5 @@ namespace Beam.Client.Services
             UpdatedRays?.Invoke();
         }
 
-        public async Task GetUserRays(string username)
-        {
-            Rays = await http.GetJsonAsync<List<Ray>>($"/api/Ray/userprisms/{username}");
-            UpdatedRays?.Invoke();
-        }
     }
 }

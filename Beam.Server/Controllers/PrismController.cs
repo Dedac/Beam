@@ -27,22 +27,24 @@ namespace Beam.Server.Controllers
 
             var prismRay = _context.Rays.Find(newPrism.RayId);
 
-            return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
                 .Where(r => r.FrequencyId == prismRay.FrequencyId)
                 .Select(r => r.ToShared())
                 .ToList();
         }
 
-        [HttpPost("[action]")]
-        public List<Ray> Remove([FromBody] int prismId)
+        [HttpGet("[action]/{UserId}/{RayId}")]
+        public List<Ray> Remove(int UserId, int RayId)
         {
-            var removePrism = _context.Find<Data.Prism>(prismId);
-            var frequencyId = removePrism.Ray.FrequencyId;
-            _context.Remove(removePrism);
-            
+            var removePrisms = _context.Prisms.Include(p => p.Ray).Where(p => p.RayId == RayId && p.UserId == UserId).ToList();
+            if (removePrisms == null || removePrisms.Count <= 0) return new List<Ray>();
+
+            var frequencyId = removePrisms.First().Ray.FrequencyId;
+            _context.RemoveRange(removePrisms);
+
             _context.SaveChanges();
 
-            return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
                 .Where(r => r.FrequencyId == frequencyId)
                 .Select(r => r.ToShared())
                 .ToList();

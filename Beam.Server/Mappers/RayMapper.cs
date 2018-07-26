@@ -1,4 +1,6 @@
-﻿namespace Beam.Server.Mappers
+﻿using System.Linq;
+
+namespace Beam.Server.Mappers
 {
     public static class RayMapper
     {
@@ -11,7 +13,8 @@
                 FrequencyId = r.FrequencyId,
                 PrismCount = r.Prisms.Count,
                 UserId = r.UserId ?? 0,
-                UserName = r.User?.Username ?? "[missing]"
+                UserName = r.User?.Username ?? "[missing]",
+                UsersPrismed = r.Prisms.Select(p => p.User.Username).ToList()
             };
         }
         public static Data.Ray ToData(this Shared.Ray r)

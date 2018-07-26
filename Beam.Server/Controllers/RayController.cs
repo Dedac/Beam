@@ -16,14 +16,22 @@ namespace Beam.Server.Controllers
         {
             _context = context;
         }
-        [HttpGet("[action]/{username}")]
-        public List<Ray> PrismRays(string username)
+
+        [HttpGet("user/{name}")]
+        public List<Ray> GetRaysByUser(string name)
         {
-            return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
-                .Where(r => r.Prisms.Any(p => p.User.Username == username))
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
+                .Where(r => r.User.Username == name)
                 .Select(r => r.ToShared()).ToList();
         }
 
+        [HttpGet("userprisms/{name}")]
+        public List<Ray> GetPrismedRaysByUser(string name)
+        {
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
+                .Where(r => r.Prisms.Any(p => p.User.Username == name))
+                .Select(r => r.ToShared()).ToList();
+        }
 
         [HttpGet("{FrequencyId}")]
         public List<Ray> Rays(int FrequencyId)
@@ -33,7 +41,7 @@ namespace Beam.Server.Controllers
 
         private List<Ray> GetRays(int FrequencyId)
         {
-            return _context.Rays.Include(r => r.Prisms).Include(r => r.User)
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
                 .Where(r => r.FrequencyId == FrequencyId)
                 .Select(r => r.ToShared()).ToList();
         }

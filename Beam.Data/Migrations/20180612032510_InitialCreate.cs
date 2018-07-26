@@ -61,7 +61,7 @@ namespace Beam.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Prsims",
+                name: "Prisms",
                 columns: table => new
                 {
                     PrismId = table.Column<int>(nullable: false)
@@ -71,15 +71,15 @@ namespace Beam.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Prsims", x => x.PrismId);
+                    table.PrimaryKey("PK_Prisms", x => x.PrismId);
                     table.ForeignKey(
-                        name: "FK_Prsims_Rays_RayId",
+                        name: "FK_Prisms_Rays_RayId",
                         column: x => x.RayId,
                         principalTable: "Rays",
                         principalColumn: "RayId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Prsims_Users_UserId",
+                        name: "FK_Prisms_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -87,13 +87,13 @@ namespace Beam.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prsims_RayId",
-                table: "Prsims",
+                name: "IX_Prisms_RayId",
+                table: "Prisms",
                 column: "RayId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prsims_UserId",
-                table: "Prsims",
+                name: "IX_Prisms_UserId",
+                table: "Prisms",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -110,7 +110,7 @@ namespace Beam.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Prsims");
+                name: "Prisms");
 
             migrationBuilder.DropTable(
                 name: "Rays");

@@ -50,7 +50,7 @@ namespace Beam.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Prsims");
+                    b.ToTable("Prisms");
                 });
 
             modelBuilder.Entity("Beam.Data.Ray", b =>

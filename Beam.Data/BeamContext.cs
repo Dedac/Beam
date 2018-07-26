@@ -10,7 +10,7 @@ namespace Beam.Data
         public DbSet<Frequency> Frequencies { get; set; }
         public DbSet<Ray> Rays { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Prism> Prsims { get; set; }
+        public DbSet<Prism> Prisms { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

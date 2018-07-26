@@ -92,9 +92,16 @@ namespace Beam.Client.Services
             UpdatedRays?.Invoke();
         }
 
+        public async Task UnPrismRay(int RayId)
+        {
+            if (CurrentUser.Id == 0) await GetOrCreateUser();
+            Rays = await http.GetJsonAsync<List<Ray>>($"/api/Prism/Remove/{CurrentUser.Id}/{RayId}");
+            UpdatedRays?.Invoke();
+        }
+
         public async Task GetUserRays(string username)
         {
-            Rays = await http.GetJsonAsync<List<Ray>>($"/api/Rays/Prismrays/{username}");
+            Rays = await http.GetJsonAsync<List<Ray>>($"/api/Ray/userprisms/{username}");
             UpdatedRays?.Invoke();
         }
     }

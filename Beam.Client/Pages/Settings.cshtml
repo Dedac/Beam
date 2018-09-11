@@ -1,0 +1,21 @@
+﻿@page "/settings"
+@inject DataService data
+
+<span>Username</span>
+<div class="input-group">
+    <input bind=name class="form-control" />
+    <div class="input-group-append">
+        <button onclick=@(() => data.GetOrCreateUser(name)) type="button" class="btn btn-outline-secondary">Update</button>
+    </div>
+</div>
+<AnimatedBeam />
+
+@functions{
+    private string name = "";
+
+    protected override void OnInit()
+    {
+        name = data.CurrentUser.Name;
+    }
+
+}

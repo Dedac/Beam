@@ -8,7 +8,6 @@ namespace Beam.Data
         public static void ConfigureServices(IServiceCollection services, string connectionString)
         {
             services.AddDbContext<BeamContext>(options => options.UseSqlServer(connectionString));
-
         }
     }
 }

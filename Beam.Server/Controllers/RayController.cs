@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using Beam.Server.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Beam.Server.Controllers
 {
@@ -15,18 +17,41 @@ namespace Beam.Server.Controllers
             _context = context;
         }
 
-        [HttpGet("[action]")]
-        public List<RayItem> Rays()
+        [HttpGet("user/{name}")]
+        public List<Ray> GetRaysByUser(string name)
         {
-            return _context.Rays.Select(r => new RayItem()
-            {
-                RayId = r.RayId,
-                Text = r.Text,
-                PrismCount = 0,
-                UserName = "billy"
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
+                .Where(r => r.User.Username == name)
+                .Select(r => r.ToShared()).ToList();
+        }
 
-            }
-            ).ToList();
+        [HttpGet("userprisms/{name}")]
+        public List<Ray> GetPrismedRaysByUser(string name)
+        {
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
+                .Where(r => r.Prisms.Any(p => p.User.Username == name))
+                .Select(r => r.ToShared()).ToList();
+        }
+
+        [HttpGet("{FrequencyId}")]
+        public List<Ray> Rays(int FrequencyId)
+        {
+            return GetRays(FrequencyId);
+        }
+
+        private List<Ray> GetRays(int FrequencyId)
+        {
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
+                .Where(r => r.FrequencyId == FrequencyId)
+                .Select(r => r.ToShared()).ToList();
+        }
+
+        [HttpPost("[action]")]
+        public List<Ray> Add([FromBody] Ray ray)
+        {
+            _context.Add(ray.ToData());
+            _context.SaveChanges();
+            return GetRays(ray.FrequencyId);
         }
 
     }

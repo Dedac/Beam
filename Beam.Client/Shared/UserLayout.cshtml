@@ -1,0 +1,9 @@
+﻿@inherits BlazorLayoutComponent
+@layout MainLayout
+@inject DataService data
+
+<NavLink class="nav-link float-right"
+         href="@($"User/{data.CurrentUser.Name}")" Match="NavLinkMatch.All">
+    See Myself
+</NavLink>
+@Body

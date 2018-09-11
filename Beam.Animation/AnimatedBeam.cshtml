@@ -1,0 +1,31 @@
+﻿@implements IDisposable
+
+<span>You Watched The Beam @beamPasses Times</span>
+<div id="animationHost"></div>
+@functions{
+    
+    int beamPasses = 0;
+    bool animationInitialized = false;
+
+    void IncrementBeamPass()
+    {
+        beamPasses++;
+        StateHasChanged();
+    }
+
+    protected override void OnAfterRender()
+    {
+        base.OnAfterRender();
+        if (!animationInitialized)
+        {
+            Javascript.BeamPassTriggered += IncrementBeamPass;
+            Javascript.LoadAnimation("animationHost", 1000, 200);
+            animationInitialized = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Javascript.BeamPassTriggered -= IncrementBeamPass;
+    }
+}

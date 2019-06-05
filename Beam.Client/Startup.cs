@@ -1,20 +1,16 @@
-﻿using Beam.Client.Services;
-using Microsoft.AspNetCore.Blazor.Builder;
+using Beam.Client.Services;
+using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Beam.Client
-{
-    public class Startup
-    {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddTransient<BeamApiService>();
-            services.AddSingleton<DataService>();
+namespace Beam.Client {
+    public class Startup {
+        public void ConfigureServices (IServiceCollection services) {
+            services.AddTransient<BeamApiService> ();
+            services.AddSingleton<DataService> ();
         }
 
-        public void Configure(IBlazorApplicationBuilder app)
-        {
-            app.AddComponent<App>("app");
+        public void Configure (IComponentsApplicationBuilder app) {
+            app.AddComponent<App> ("app");
         }
     }
 }

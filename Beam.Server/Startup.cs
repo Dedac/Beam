@@ -1,60 +1,46 @@
-﻿using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 using System.Linq;
-using System.Net.Mime;
 
 namespace Beam.Server
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-        }
-
-        public IConfigurationRoot Configuration { get; }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            Data.Configure.ConfigureServices(services, Configuration.GetConnectionString("DefaultConnection"));
-            services.AddMvc();
-
-            services.AddResponseCompression(options =>
+            services.AddMvc().AddNewtonsoftJson();
+            services.AddResponseCompression(opts =>
             {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                {
-                    MediaTypeNames.Application.Octet,
-                    WasmMediaTypeNames.Application.Wasm,
-                });
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBlazorDebugging();
             }
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
+                endpoints.MapDefaultControllerRoute();
             });
 
-            app.UseBlazor<Client.Program>();
+            app.UseBlazor<Client.Startup>();
         }
     }
 }

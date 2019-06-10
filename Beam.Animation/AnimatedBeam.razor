@@ -1,9 +1,10 @@
 ﻿@implements IDisposable
+@inject Javascript _javascript
 
 <span>You Watched The Beam @beamPasses Times</span>
 <div id="animationHost"></div>
 @functions{
-    
+
     int beamPasses = 0;
     bool animationInitialized = false;
 
@@ -19,7 +20,7 @@
         if (!animationInitialized)
         {
             Javascript.BeamPassTriggered += IncrementBeamPass;
-            Javascript.LoadAnimation("animationHost", 1000, 200);
+            _javascript.LoadAnimation("animationHost", 1000, 200);
             animationInitialized = true;
         }
     }

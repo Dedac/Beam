@@ -19,7 +19,7 @@
         base.OnAfterRender();
         if (!animationInitialized)
         {
-            _javascript.BeamPassTriggered += IncrementBeamPass;
+            Javascript.BeamPassTriggered += IncrementBeamPass;
             _javascript.LoadAnimation("animationHost", 1000, 200);
             animationInitialized = true;
         }
@@ -27,6 +27,6 @@
 
     public void Dispose()
     {
-        _javascript.BeamPassTriggered -= IncrementBeamPass;
+        Javascript.BeamPassTriggered -= IncrementBeamPass;
     }
 }

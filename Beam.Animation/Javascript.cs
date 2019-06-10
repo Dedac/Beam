@@ -12,7 +12,7 @@ namespace Beam.Animation
             _jsRuntime = jsRuntime;
         }
 
-        public event Action BeamPassTriggered;
+        public static event Action BeamPassTriggered;
         public Task LoadAnimation(string elementId, int width, int height)
         {
             return _jsRuntime.InvokeAsync<object>
@@ -20,7 +20,7 @@ namespace Beam.Animation
         }
 
         [JSInvokable]
-        public Task BeamPassedBy()
+        public static Task BeamPassedBy()
         {
             return Task.Run(() => BeamPassTriggered?.Invoke());
         }

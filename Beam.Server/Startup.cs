@@ -26,8 +26,9 @@ namespace Beam.Server
         public void ConfigureServices(IServiceCollection services)
         {
             Data.Configure.ConfigureServices(services, Configuration.GetConnectionString("DefaultConnection"));
-            
-            services.AddMvc().AddNewtonsoftJson();
+
+            services.AddControllers().AddNewtonsoftJson();
+
             services.AddResponseCompression(opts =>            
             {
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
@@ -46,12 +47,14 @@ namespace Beam.Server
                 app.UseBlazorDebugging();
             }
             app.UseRouting();
+            
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllers();
             });
-
-            app.UseBlazor<Client.Program>();
+            
+            
+            app.UseBlazor<Client.Startup>();
         }
     }
 }

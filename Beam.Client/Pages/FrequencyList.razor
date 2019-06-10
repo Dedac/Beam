@@ -28,12 +28,11 @@
     {
         data.UdpatedFrequencies += StateHasChanged;
         data.GetFrequencies().ConfigureAwait(false);
-        name = "loaded";
     }
 
     void AddFrequencyClick()
     {
         data.AddFrequency(name).ConfigureAwait(false);
-        name = "stuff";
+        name = "";
     }
 }

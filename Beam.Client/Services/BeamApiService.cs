@@ -17,22 +17,22 @@ namespace Beam.Client.Services
 
         internal Task<List<Frequency>> FrequencyList()
         {
-            return http.GetJsonAsync<List<Frequency>>("/api/Frequency/All");
+            return http.GetJsonAsync<List<Frequency>>("api/Frequency/All");
         }
 
         internal Task<List<Ray>> RayList(int frequencyId)
         {
-            return http.GetJsonAsync<List<Ray>>($"/api/Ray/{frequencyId}");
+            return http.GetJsonAsync<List<Ray>>($"api/Ray/{frequencyId}");
         }
 
         internal Task<List<Frequency>> AddFrequency(Frequency frequency)
         {
-            return http.PostJsonAsync<List<Frequency>>("/api/Frequency/Add", frequency);
+            return http.PostJsonAsync<List<Frequency>>("api/Frequency/Add", frequency);
         }
 
         internal Task<List<Ray>> AddRay(Ray ray)
         {
-            return http.PostJsonAsync<List<Ray>>("/api/Ray/Add", ray);
+            return http.PostJsonAsync<List<Ray>>("api/Ray/Add", ray);
         }
 
         internal Task<User> GetOrCreateUser(string name)
@@ -42,17 +42,17 @@ namespace Beam.Client.Services
 
         internal Task<List<Ray>> PrismRay(Prism prism)
         {
-            return http.PostJsonAsync<List<Ray>>("/api/Prism/Add", prism);
+            return http.PostJsonAsync<List<Ray>>("api/Prism/Add", prism);
         }
 
         internal Task<List<Ray>> UnPrismRay(int rayId, int userId)
         {
-            return http.GetJsonAsync<List<Ray>>($"/api/Prism/Remove/{userId}/{rayId}");
+            return http.GetJsonAsync<List<Ray>>($"api/Prism/Remove/{userId}/{rayId}");
         }
 
         internal Task<List<Ray>> UserRays(string name)
         {
-            return http.GetJsonAsync<List<Ray>>($"/api/Ray/user/{name}");
+            return http.GetJsonAsync<List<Ray>>($"api/Ray/user/{name}");
         }
     }
 }

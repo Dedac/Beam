@@ -28,8 +28,10 @@
     void UpdateNewRayText()
     {
         if (!data.Rays.Any(r => r.UserName == data.CurrentUser.Name))
+        {
             newRayText = $"Hello, My Name is {data.CurrentUser.Name}";
+        }
     }
 
-    
+
 }

@@ -1,22 +1,26 @@
 ﻿using Microsoft.JSInterop;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Beam.Animation
 {
-    public static class Javascript
+    public class Javascript
     {
-        public static event Action BeamPassTriggered;
-        public static Task LoadAnimation(string elementId, int width, int height)
+        private IJSRuntime _jsRuntime;
+        public Javascript(IJSRuntime jsRuntime)
         {
-            return JSRuntime.Current.InvokeAsync<object>
+            _jsRuntime = jsRuntime;
+        }
+
+        public event Action BeamPassTriggered;
+        public Task LoadAnimation(string elementId, int width, int height)
+        {
+            return _jsRuntime.InvokeAsync<object>
                 ("animatedBeam.loadAnimation", elementId, width, height);
         }
 
         [JSInvokable]
-        public static Task BeamPassedBy()
+        public Task BeamPassedBy()
         {
             return Task.Run(() => BeamPassTriggered?.Invoke());
         }

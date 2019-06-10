@@ -16,7 +16,7 @@
     <div class="input-group">
         <input bind=name placeholder="New Frequency" class="form-control" />
         <div class="input-group-append">
-            <button onclick="@AddFrequencyClick" type="button" class="btn btn-outline-secondary"><span class="oi oi-plus"></span></button>
+            <button onclick=@AddFrequencyClick type="button" class="btn btn-outline-secondary"><span class="oi oi-plus"></span></button>
         </div>
     </div>
 </li>
@@ -28,11 +28,12 @@
     {
         data.UdpatedFrequencies += StateHasChanged;
         data.GetFrequencies().ConfigureAwait(false);
+        name = "loaded";
     }
 
     void AddFrequencyClick()
     {
         data.AddFrequency(name).ConfigureAwait(false);
-        name = "";
+        name = "stuff";
     }
 }

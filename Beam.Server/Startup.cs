@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Blazor.Server;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Linq;
-using System.Net.Mime;
 
 namespace Beam.Server
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -27,31 +26,29 @@ namespace Beam.Server
         public void ConfigureServices(IServiceCollection services)
         {
             Data.Configure.ConfigureServices(services, Configuration.GetConnectionString("DefaultConnection"));
-            services.AddMvc();
-
-            services.AddResponseCompression(options =>
+            
+            services.AddMvc().AddNewtonsoftJson();
+            services.AddResponseCompression(opts =>            
             {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                {
-                    MediaTypeNames.Application.Octet,
-                    WasmMediaTypeNames.Application.Wasm,
-                });
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBlazorDebugging();
             }
-
-            app.UseMvc(routes =>
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
+                endpoints.MapDefaultControllerRoute();
             });
 
             app.UseBlazor<Client.Program>();

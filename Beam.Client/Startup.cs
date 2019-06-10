@@ -1,5 +1,5 @@
 ﻿using Beam.Client.Services;
-using Microsoft.AspNetCore.Blazor.Builder;
+using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Beam.Client
@@ -10,9 +10,10 @@ namespace Beam.Client
         {
             services.AddTransient<BeamApiService>();
             services.AddSingleton<DataService>();
+            services.AddSingleton<Animation.Javascript>();
         }
 
-        public void Configure(IBlazorApplicationBuilder app)
+        public void Configure(IComponentsApplicationBuilder app)
         {
             app.AddComponent<App>("app");
         }

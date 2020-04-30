@@ -13,9 +13,9 @@ namespace Beam.Animation
         }
 
         public static event Action BeamPassTriggered;
-        public Task LoadAnimation(string elementId, int width, int height)
+        public ValueTask<string> LoadAnimation(string elementId, int width, int height)
         {
-            return _jsRuntime.InvokeAsync<object>
+            return _jsRuntime.InvokeAsync<string>
                 ("animatedBeam.loadAnimation", elementId, width, height);
         }
 

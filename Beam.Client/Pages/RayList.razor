@@ -2,20 +2,20 @@
 @inject DataService data
 
 
-<RayInput bind-newRayText="@newRayText" />
+<RayInput @newRayText="newRayText" />
 @foreach (var ray in data.Rays)
 {
     <p>
-        <RayItem ray="@ray" />
+        <RayItem @ray="ray" />
     </p>
 }
 
 
 @functions{
     [Parameter]
-    string Id { get; set; }
+    public string Id { get; set; }
 
-    string newRayText { get; set; }
+    public string newRayText { get; set; }
 
     protected override void OnParametersSet()
     {

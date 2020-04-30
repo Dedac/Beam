@@ -9,13 +9,13 @@
 @foreach (var ray in Rays)
 {
     <p>
-        <RayItem ray="@ray" />
+        <RayItem @ray="ray" />
     </p>
 
 }
 @functions {
     [Parameter]
-    string Name { get; set; }
+    public string Name { get; set; }
 
     List<Ray> Rays = new List<Ray>();
 

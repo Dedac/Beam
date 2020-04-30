@@ -6,7 +6,7 @@
 @functions{
 
     int beamPasses = 0;
-    bool animationInitialized = false;
+    //bool animationInitialized = false;
 
     void IncrementBeamPass()
     {
@@ -14,14 +14,14 @@
         StateHasChanged();
     }
 
-    protected override void OnAfterRender()
+    protected override void OnAfterRender(bool firstRender)
     {
-        base.OnAfterRender();
-        if (!animationInitialized)
+        base.OnAfterRender(firstRender);
+        if (firstRender)
         {
             Javascript.BeamPassTriggered += IncrementBeamPass;
             _javascript.LoadAnimation("animationHost", 1000, 200);
-            animationInitialized = true;
+            //animationInitialized = true;
         }
     }
 

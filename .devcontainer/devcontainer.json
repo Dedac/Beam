@@ -5,8 +5,7 @@
 	"name": "Beam Dev Env",
 
 	"dockerComposeFile": [
-		"../docker-compose.yml",
-		"docker-compose.yml"
+		"docker-compose.yml",
 	],
 
 	// The 'service' property is the name of the service for the container that VS Code should
@@ -23,7 +22,11 @@
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": []
+	"extensions": [
+		"ms-dotnettools.csharp",
+		"ms-vscode.js-debug-nightly",
+		"ms-mssql.mssql"
+	]
 
 	// Uncomment the next line if you want start specific services in your Docker Compose config.
 	// "runServices": [],

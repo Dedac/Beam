@@ -34,33 +34,35 @@ namespace Beam.Server
         {
             Data.Configure.ConfigureServices(services, Configuration.GetConnectionString("DefaultConnection"));
 
-            services.AddControllers().AddNewtonsoftJson();
-
-            services.AddResponseCompression(opts =>            
-            {
-                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-                    new[] { "application/octet-stream" });
-            });
+            services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseResponseCompression();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebAssemblyDebugging();
             }
+            else
+            {
+                 app.UseExceptionHandler("/Error");
+                 app.UseHsts();
+            }
             
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
+
             app.UseRouting();
-            
+
+           
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapFallbackToFile("index.html");                
             });
         }
     }

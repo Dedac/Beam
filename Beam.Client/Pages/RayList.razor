@@ -1,8 +1,8 @@
-﻿@page "/frequency/{id}"
+@page "/frequency/{id}"
 @inject DataService data
 
 
-<RayInput @newRayText="newRayText" />
+<RayInput newRayText="@newRayText" />
 @foreach (var ray in data.Rays)
 {
     <p>

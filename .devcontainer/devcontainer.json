@@ -27,16 +27,9 @@
 		"ms-dotnettools.csharp",
 		"ms-vscode.js-debug-nightly",
 		"ms-mssql.mssql"
-	]
+	],
 
-	// Uncomment the next line if you want start specific services in your Docker Compose config.
-	// "runServices": [],
-
-	// Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-	// "shutdownAction": "none",
-
-	// Uncomment the next line to run commands after the container is created - for example installing git.
-	//"postCreateCommand": "apt-get update && apt-get install -y git",
+	"postCreateCommand": "/bin/bash ./.devcontainer/post-create.sh > ~/post-create.log"
 
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	//"remoteUser": "vscode"

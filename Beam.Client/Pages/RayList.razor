@@ -1,8 +1,8 @@
-﻿@page "/frequency/{id}"
+@page "/frequency/{id}"
 @inject DataService data
 
 
-<RayInput bind-newRayText="@newRayText" />
+<RayInput newRayText="@newRayText" />
 @foreach (var ray in data.Rays)
 {
     <p>
@@ -11,18 +11,18 @@
 }
 
 
-@functions{
+@code{
     [Parameter]
-    string Id { get; set; }
+    public string Id { get; set; }
 
-    string newRayText { get; set; }
+    public string newRayText { get; set; }
 
     protected override void OnParametersSet()
     {
         data.UpdatedRays += StateHasChanged;
         data.UpdatedRays += UpdateNewRayText;
         data.SelectedFrequency = Int32.Parse(Id);
-
+        UpdateNewRayText();
     }
 
     void UpdateNewRayText()

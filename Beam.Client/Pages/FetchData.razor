@@ -18,12 +18,12 @@ else
     </ul>
 }
 
-@functions {
+@code {
 FrequencyItem[] frequencies;
 
-protected override async Task OnInitAsync()
+protected override async Task OnInitializedAsync()
 {
-    frequencies = await Http.GetJsonAsync<FrequencyItem[]>("api/Frequency/All");
+    frequencies = await Http.GetFromJsonAsync<FrequencyItem[]>("api/Frequency/All");
 }
 
 }

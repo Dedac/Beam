@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Beam.Shared;
 using Microsoft.AspNetCore.Components;
@@ -17,42 +18,45 @@ namespace Beam.Client.Services
 
         internal Task<List<Frequency>> FrequencyList()
         {
-            return http.GetJsonAsync<List<Frequency>>("api/Frequency/All");
+            return http.GetFromJsonAsync<List<Frequency>>("api/Frequency/All");
         }
 
         internal Task<List<Ray>> RayList(int frequencyId)
         {
-            return http.GetJsonAsync<List<Ray>>($"api/Ray/{frequencyId}");
+            return http.GetFromJsonAsync<List<Ray>>($"api/Ray/{frequencyId}");
         }
 
-        internal Task<List<Frequency>> AddFrequency(Frequency frequency)
+        internal async Task<List<Frequency>> AddFrequency(Frequency frequency)
         {
-            return http.PostJsonAsync<List<Frequency>>("api/Frequency/Add", frequency);
+            var resp = await http.PostAsJsonAsync("api/Frequency/Add", frequency);
+            return await resp.Content.ReadFromJsonAsync<List<Frequency>>();
         }
 
-        internal Task<List<Ray>> AddRay(Ray ray)
+        internal async Task<List<Ray>> AddRay(Ray ray)
         {
-            return http.PostJsonAsync<List<Ray>>("api/Ray/Add", ray);
+            var resp = await http.PostAsJsonAsync("api/Ray/Add", ray);
+            return await resp.Content.ReadFromJsonAsync<List<Ray>>();
         }
 
         internal Task<User> GetOrCreateUser(string name)
         {
-            return http.GetJsonAsync<User>($"api/User/Get/{name}");
+            return http.GetFromJsonAsync<User>($"api/User/Get/{name}");
         }
 
-        internal Task<List<Ray>> PrismRay(Prism prism)
+        internal async Task<List<Ray>> PrismRay(Prism prism)
         {
-            return http.PostJsonAsync<List<Ray>>("api/Prism/Add", prism);
+            var resp = await http.PostAsJsonAsync("api/Prism/Add", prism);
+            return await resp.Content.ReadFromJsonAsync<List<Ray>>();           
         }
 
         internal Task<List<Ray>> UnPrismRay(int rayId, int userId)
         {
-            return http.GetJsonAsync<List<Ray>>($"api/Prism/Remove/{userId}/{rayId}");
+            return http.GetFromJsonAsync<List<Ray>>($"api/Prism/Remove/{userId}/{rayId}");
         }
 
         internal Task<List<Ray>> UserRays(string name)
         {
-            return http.GetJsonAsync<List<Ray>>($"api/Ray/user/{name}");
+            return http.GetFromJsonAsync<List<Ray>>($"api/Ray/user/{name}");
         }
     }
 }

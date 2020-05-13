@@ -5,13 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Chrome",
-            "request": "launch",
-            "type": "pwa-chrome",
-            "url": "http://localhost:5000",
-            "webRoot": "${workspaceFolder}/Beam.Server/bin/Debug/netcoreapp3.1"
-        },
-        {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
@@ -30,6 +23,13 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Beam.Server/Views"
             },
+        },
+        {
+            "name": "Launch Chrome (Debug outside of container)",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:5000",
+            "webRoot": "${workspaceFolder}/Beam.Server/bin/Debug/netcoreapp3.1"
         }
     ]
 }

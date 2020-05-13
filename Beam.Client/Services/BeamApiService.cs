@@ -28,14 +28,14 @@ namespace Beam.Client.Services
 
         internal async Task<List<Frequency>> AddFrequency(Frequency frequency)
         {
-            await http.PostAsJsonAsync("api/Frequency/Add", frequency);
-            return await FrequencyList();
+            var resp = await http.PostAsJsonAsync("api/Frequency/Add", frequency);
+            return await resp.Content.ReadFromJsonAsync<List<Frequency>>();
         }
 
         internal async Task<List<Ray>> AddRay(Ray ray)
         {
-            await http.PostAsJsonAsync("api/Ray/Add", ray);
-            return await RayList(ray.FrequencyId);
+            var resp = await http.PostAsJsonAsync("api/Ray/Add", ray);
+            return await resp.Content.ReadFromJsonAsync<List<Ray>>();
         }
 
         internal Task<User> GetOrCreateUser(string name)
@@ -46,8 +46,7 @@ namespace Beam.Client.Services
         internal async Task<List<Ray>> PrismRay(Prism prism)
         {
             var resp = await http.PostAsJsonAsync("api/Prism/Add", prism);
-        
-            return await RayList(1);
+            return await resp.Content.ReadFromJsonAsync<List<Ray>>();           
         }
 
         internal Task<List<Ray>> UnPrismRay(int rayId, int userId)

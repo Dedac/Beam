@@ -9,7 +9,7 @@
 @foreach (var ray in Rays)
 {
     <p>
-        <RayItem @ray="ray" />
+        <RayItem ray="@ray" />
     </p>
 
 }
@@ -19,9 +19,15 @@
 
     List<Ray> Rays = new List<Ray>();
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
+    {
+        data.UpdatedRays += UpdateUserRays;
+        UpdateUserRays();
+    }
+
+    async void UpdateUserRays()
     {
         Rays = await data.GetUserRays(Name);
-
+        StateHasChanged();
     }
 }

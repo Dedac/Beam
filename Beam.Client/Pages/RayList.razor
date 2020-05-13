@@ -6,7 +6,7 @@
 @foreach (var ray in data.Rays)
 {
     <p>
-        <RayItem @ray="ray" />
+        <RayItem ray="@ray" />
     </p>
 }
 
@@ -22,7 +22,7 @@
         data.UpdatedRays += StateHasChanged;
         data.UpdatedRays += UpdateNewRayText;
         data.SelectedFrequency = Int32.Parse(Id);
-
+        UpdateNewRayText();
     }
 
     void UpdateNewRayText()

@@ -2,17 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json; 
 using System.Threading.Tasks;
 
 namespace Beam.Client.Services
 {
     public class DataService
     {
-        private readonly BeamApiService _apiService;
         public IReadOnlyList<Frequency> Frequencies { get; private set; }
         public IReadOnlyList<Ray> Rays { get; private set; } = new List<Ray>();
         public User CurrentUser { get; set; }
-
+        HttpClient http;
+        
         private int? selectedFrequency;
         public int SelectedFrequency
         {
@@ -31,9 +33,9 @@ namespace Beam.Client.Services
             }
         }
 
-        public DataService(BeamApiService apiService)
+        public DataService(HttpClient httpClient)
         {
-            _apiService = apiService;
+            http = httpClient;
             if (CurrentUser == null) CurrentUser = new User() { Name = "Anon" + new Random().Next(0, 10) };
         }
 
@@ -42,20 +44,20 @@ namespace Beam.Client.Services
 
         public async Task GetFrequencies()
         {
-            Frequencies = await _apiService.FrequencyList(); 
+            Frequencies = await FrequencyList(); 
             UdpatedFrequencies?.Invoke();
         }
 
         public async Task GetRays(int FrequencyId)
         {
             Rays = new List<Ray>();
-            Rays = await _apiService.RayList(FrequencyId); 
+            Rays = await RayList(FrequencyId); 
             UpdatedRays?.Invoke();
         }
 
         public async Task AddFrequency(string Name)
         {
-            Frequencies = await _apiService.AddFrequency(new Frequency() { Name = Name });  
+            Frequencies = await AddFrequency(new Frequency() { Name = Name });  
             UdpatedFrequencies?.Invoke();
         }
 
@@ -74,32 +76,72 @@ namespace Beam.Client.Services
                 ray.UserId = CurrentUser.Id;
             }
 
-            Rays = await _apiService.AddRay(ray); 
+            Rays = await AddRay(ray); 
             UpdatedRays?.Invoke();
-        }
-
-        public async Task GetOrCreateUser(string newName = null)
-        {
-            CurrentUser = await _apiService.GetOrCreateUser(newName ?? CurrentUser.Name); 
         }
 
         public async Task PrismRay(int RayId)
         {
             if (CurrentUser.Id == 0) await GetOrCreateUser();
-            Rays = await _apiService.PrismRay(new Prism() { RayId = RayId, UserId = CurrentUser.Id }); 
+            Rays = await PrismRay(new Prism() { RayId = RayId, UserId = CurrentUser.Id }); 
             UpdatedRays?.Invoke();
         }
 
         public async Task UnPrismRay(int RayId)
         {
             if (CurrentUser.Id == 0) await GetOrCreateUser();
-            Rays = await _apiService.UnPrismRay(RayId, CurrentUser.Id); 
+            Rays = await UnPrismRay(RayId, CurrentUser.Id); 
             UpdatedRays?.Invoke();
         }
 
         public async Task<List<Ray>> GetUserRays(string name)
         {
-            return await _apiService.UserRays(name ?? CurrentUser.Name); 
+            return await UserRays(name ?? CurrentUser.Name); 
+        }
+
+        internal Task<List<Frequency>> FrequencyList()
+        {
+            return http.GetFromJsonAsync<List<Frequency>>("api/Frequency/All");
+        }
+
+        internal Task<List<Ray>> RayList(int frequencyId)
+        {
+            return http.GetFromJsonAsync<List<Ray>>($"api/Ray/{frequencyId}");
+        }
+
+        internal async Task<List<Frequency>> AddFrequency(Frequency frequency)
+        {
+            var resp = await http.PostAsJsonAsync("api/Frequency/Add", frequency);
+            return await resp.Content.ReadFromJsonAsync<List<Frequency>>();
+        }
+
+        internal async Task<List<Ray>> AddRay(Ray ray)
+        {
+            var resp = await http.PostAsJsonAsync("api/Ray/Add", ray);
+            return await resp.Content.ReadFromJsonAsync<List<Ray>>();
+        }
+
+        internal async Task<User> GetOrCreateUser(string newName = null)
+        {
+            var name = newName ?? CurrentUser.Name;
+            CurrentUser = await http.GetFromJsonAsync<User>($"api/User/Get/{name}");
+            return CurrentUser;
+        }
+
+        internal async Task<List<Ray>> PrismRay(Prism prism)
+        {
+            var resp = await http.PostAsJsonAsync("api/Prism/Add", prism);
+            return await resp.Content.ReadFromJsonAsync<List<Ray>>();           
+        }
+
+        internal Task<List<Ray>> UnPrismRay(int rayId, int userId)
+        {
+            return http.GetFromJsonAsync<List<Ray>>($"api/Prism/Remove/{userId}/{rayId}");
+        }
+
+        internal Task<List<Ray>> UserRays(string name)
+        {
+            return http.GetFromJsonAsync<List<Ray>>($"api/Ray/user/{name}");
         }
 
     }

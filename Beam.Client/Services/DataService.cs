@@ -94,11 +94,6 @@ namespace Beam.Client.Services
             UpdatedRays?.Invoke();
         }
 
-        public async Task<List<Ray>> GetUserRays(string name)
-        {
-            return await UserRays(name ?? CurrentUser.Name); 
-        }
-
         internal Task<List<Frequency>> FrequencyList()
         {
             return http.GetFromJsonAsync<List<Frequency>>("api/Frequency/All");
@@ -138,11 +133,5 @@ namespace Beam.Client.Services
         {
             return http.GetFromJsonAsync<List<Ray>>($"api/Prism/Remove/{userId}/{rayId}");
         }
-
-        internal Task<List<Ray>> UserRays(string name)
-        {
-            return http.GetFromJsonAsync<List<Ray>>($"api/Ray/user/{name}");
-        }
-
     }
 }

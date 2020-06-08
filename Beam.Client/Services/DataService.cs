@@ -55,6 +55,11 @@ namespace Beam.Client.Services
             UpdatedRays?.Invoke();
         }
 
+        public async Task<List<Ray>> GetMyRays()
+        {
+            return await http.GetFromJsonAsync<List<Ray>>($"api/Ray/user/{CurrentUser.Name}");
+        }
+
         public async Task AddFrequency(string Name)
         {
             Frequencies = await AddFrequency(new Frequency() { Name = Name });  
@@ -133,5 +138,6 @@ namespace Beam.Client.Services
         {
             return http.GetFromJsonAsync<List<Ray>>($"api/Prism/Remove/{userId}/{rayId}");
         }
+
     }
 }

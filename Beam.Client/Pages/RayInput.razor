@@ -1,8 +1,6 @@
 @inject DataService data;
 <p>
-    <div class="card">
-        <div class="card-body">
-            <span class="card-title">Cast a New Ray:</span>
+    <Card Title="Cast a New Ray">
             <div class="input-group">
                 <input @bind="newRayText" class="form-control" />
                 <div class="input-group-append">
@@ -10,8 +8,7 @@
                     <button @onclick="CastRay" type="button" class="btn btn-outline-secondary"><span class="oi oi-audio"></span></button>
                 </div>
             </div>
-        </div>
-    </div>
+    </Card>
 </p>
 
 @code{

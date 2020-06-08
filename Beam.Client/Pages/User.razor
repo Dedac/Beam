@@ -16,7 +16,7 @@
 
     List<Ray> Rays = new List<Ray>();
     
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         Rays = await data.GetUserRays(Name);
     }

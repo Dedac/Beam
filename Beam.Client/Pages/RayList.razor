@@ -9,6 +9,7 @@
             <div class="input-group">
                 <input @bind="newRayText" class="form-control" />
                 <div class="input-group-append">
+                    <button @onclick="ClearText" type="button" class="btn btn-outline-secondary"><span class="oi oi-circle-x"></span></button>
                     <button @onclick="CastRay" type="button" class="btn btn-outline-secondary"><span class="oi oi-audio"></span></button>
                 </div>
             </div>
@@ -33,11 +34,22 @@
     {
         data.UpdatedRays += StateHasChanged;
         data.SelectedFrequency = Int32.Parse(Id);
+        data.UpdatedRays += UpdateNewRayText;
+        UpdateNewRayText();
     }
     
+    void UpdateNewRayText(){
+        if (!data.Rays.Any(r => r.UserName == data.CurrentUser.Name))
+            newRayText = $"Hello, my name is {data.CurrentUser.Name}";
+    }
+
     async Task CastRay()
     {
         await data.CreateRay(newRayText);
+        newRayText = "";
+    }
+
+    void ClearText(){
         newRayText = "";
     }
 }

@@ -5,31 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (web)",
-            "type": "coreclr",
+            "name": "Launch and Debug Hosted Blazor WebAssembly App",
+            "type": "blazorwasm",
             "request": "launch",
-            "preLaunchTask": "build",
+            "hosted": true,
             "program": "${workspaceFolder}/Beam.Server/bin/Debug/netcoreapp3.1/Beam.Server.dll",
-            "args": [],
             "cwd": "${workspaceFolder}/Beam.Server",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Beam.Server/Views"
-            },
-        },
-        {
-            "name": "Launch Chrome (Debug outside of container)",
-            "request": "launch",
-            "type": "pwa-chrome",
-            "url": "http://localhost:5000",
-            "webRoot": "${workspaceFolder}/Beam.Server/bin/Debug/netcoreapp3.1"
         }
     ]
 }

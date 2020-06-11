@@ -1,10 +1,12 @@
 using System.Net.Http;
-using System.Net.Http.Json; 
+using System.Net.Http.Json;
 using Beam.Shared;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
-public class BeamApiService {
+namespace Beam.Client.Services
+{
+    public class BeamApiService
+    {
         HttpClient http;
 
         public BeamApiService(HttpClient httpClient)
@@ -14,9 +16,9 @@ public class BeamApiService {
 
         internal Task<List<Ray>> GetUserRays(string name)
         {
-           return http.GetFromJsonAsync<List<Ray>>($"api/Ray/user/{name}");
+            return http.GetFromJsonAsync<List<Ray>>($"api/Ray/user/{name}");
         }
-         internal Task<List<Frequency>> FrequencyList()
+        internal Task<List<Frequency>> FrequencyList()
         {
             return http.GetFromJsonAsync<List<Frequency>>("api/Frequency/All");
         }
@@ -43,7 +45,7 @@ public class BeamApiService {
         internal async Task<List<Ray>> PrismRay(Prism prism)
         {
             var resp = await http.PostAsJsonAsync("api/Prism/Add", prism);
-            return await resp.Content.ReadFromJsonAsync<List<Ray>>();           
+            return await resp.Content.ReadFromJsonAsync<List<Ray>>();
         }
 
         internal Task<List<Ray>> UnPrismRay(int rayId, int userId)
@@ -56,4 +58,5 @@ public class BeamApiService {
             return http.GetFromJsonAsync<User>($"api/User/Get/{name}");
         }
 
+    }
 }

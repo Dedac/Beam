@@ -25,7 +25,7 @@
         var cut = fixture.GetComponentUnderTest<FrequencyList>();
         // Act - click button to add the frequency
         cut.Find("input").Change("Hi");
-        cut.Find("button").Click();
+        cut.Find("form").Submit();
 
         // Assert that the new frequency was added, and a 3rd list item is available
         var expected = fixture.GetFragment();

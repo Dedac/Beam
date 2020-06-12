@@ -1,12 +1,5 @@
-using System;
 using Xunit;
 using Bunit;
-using Bunit.Mocking.JSInterop;
-using Beam.Client.Services;
-using Beam.Client.Pages;
-using System.Net.Http;
-using Microsoft.Extensions.DependencyInjection;
-using static Bunit.ComponentParameterFactory;
 
 namespace Beam.Tests
 {

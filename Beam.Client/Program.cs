@@ -19,8 +19,8 @@ namespace Beam.Client
                 {
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
                 });
-            builder.Services.AddTransient<BeamApiService>();
-            builder.Services.AddSingleton<DataService>();
+            builder.Services.AddTransient<IBeamApiService, BeamApiService>();
+            builder.Services.AddSingleton<IDataService, DataService>();
             await builder.Build().RunAsync();
         }
     }

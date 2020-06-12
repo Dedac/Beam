@@ -1,0 +1,34 @@
+﻿@inherits TestComponentBase
+<Fixture Description="Add a new Frequency shows up in the list" Test="TestFrequencyList">
+    <ComponentUnderTest>
+        <FrequencyList></FrequencyList>
+    </ComponentUnderTest>
+    <Fragment>
+       <li diff:ignore ></li>
+       <li class:ignore>
+            <a href="frequency/2" class="nav-link">
+                <span diff:ignore></span>
+                <span> Hi </span>
+            </a>
+        </li>
+        <li diff:ignore> </li>
+    </Fragment>
+</Fixture>
+
+@code
+{
+    public void TestFrequencyList(Fixture fixture)
+    {
+        // Arrange
+        fixture.Services.AddScoped<NavigationManager, MockNavigationManager>();
+        fixture.Services.AddSingleton<IDataService, TestDataService>();
+        var cut = fixture.GetComponentUnderTest<FrequencyList>();
+        // Act - click button to add the frequency
+        cut.Find("input").Change("Hi");
+        cut.Find("button").Click();
+
+        // Assert that the new frequency was added, and a 3rd list item is available
+        var expected = fixture.GetFragment();
+        cut.MarkupMatches(expected);
+    }
+}

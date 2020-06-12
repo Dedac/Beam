@@ -1,15 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace Beam.Data
 {
-    public class BeamContext : DbContext
+    public class BeamContext : IdentityDbContext<AuthUser>
     {
         public BeamContext(DbContextOptions<BeamContext> contextOptions) : base(contextOptions) { }
 
         public DbSet<Frequency> Frequencies { get; set; }
+        public DbSet<User> AppUsers { get; set; }
         public DbSet<Ray> Rays { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Prism> Prisms { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -21,7 +23,12 @@ namespace Beam.Data
     {
         public int FrequencyId { get; set; }
         public string Name { get; set; }
-        public List<Ray> Rays { get; set;}
+        public List<Ray> Rays { get; set; }
+    }
+
+    public class AuthUser : IdentityUser
+    {
+        public User AppUser { get; set; }
     }
 
     public class User

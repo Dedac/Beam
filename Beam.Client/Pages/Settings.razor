@@ -1,9 +1,11 @@
 @page "/settings"
 
 <AuthorizeView>
+    <Authorized>
     <span>Username</span>
 
     <div class="input-group">
         <label class="form-control">@context.User.Identity.Name</label>
     </div>
+    </Authorized>
 </AuthorizeView>

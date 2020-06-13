@@ -9,12 +9,12 @@ namespace Beam.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly UserManager<AuthUser> _userManager;
         private readonly SignInManager<AuthUser> _signInManager;
         Data.BeamContext _context;
-        public AuthenticationController(UserManager<AuthUser> userManager, SignInManager<AuthUser> signInManager, Data.BeamContext context)
+        public AuthController(UserManager<AuthUser> userManager, SignInManager<AuthUser> signInManager, Data.BeamContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -38,7 +38,7 @@ namespace Beam.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(Login login)
         {
-            if (_context.AppUsers.Any(u => u.Username.ToLowerInvariant() == login.Username ))
+            if (_context.AppUsers.Any(u => u.Username == login.Username ))
             return BadRequest("User Already Exists");
             var user = new AuthUser();
             user.UserName = login.Username;

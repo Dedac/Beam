@@ -20,6 +20,12 @@ namespace Beam.Client.Services
         
         Task<List<Ray>> UnPrismRay(int rayId, int userId);
         
-        Task<User> GetUser(string name);
-    }
+        Task<User> GetUser();
+
+        Task Login(Login login);
+
+        Task Register(Login login);
+
+        Task Logout();
+   }
 }

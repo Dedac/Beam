@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace Beam.Client.Services
 {
@@ -14,6 +15,7 @@ namespace Beam.Client.Services
         
         private int? selectedFrequency;
         private readonly IBeamApiService apiService;
+        private readonly NavigationManager navigationManager;
 
         public int SelectedFrequency
         {
@@ -32,10 +34,10 @@ namespace Beam.Client.Services
             }
         }
 
-        public DataService(IBeamApiService apiService)
+        public DataService(IBeamApiService apiService, NavigationManager navMan)
         {
-            if (CurrentUser == null) CurrentUser = new User() { Name = "Anon" + new Random().Next(0, 10) };
             this.apiService = apiService;
+            navigationManager = navMan;
         }
 
         public event Action UdpatedFrequencies;
@@ -76,7 +78,7 @@ namespace Beam.Client.Services
 
             if (CurrentUser.Id == 0)
             {
-                await GetOrCreateUser();
+                navigationManager.NavigateTo("/login");
                 ray.UserId = CurrentUser.Id;
             }
 
@@ -86,24 +88,18 @@ namespace Beam.Client.Services
 
         public async Task PrismRay(int RayId)
         {
-            if (CurrentUser.Id == 0) await GetOrCreateUser();
+            if (CurrentUser.Id == 0) 
+                navigationManager.NavigateTo("/login");
             Rays = await apiService.PrismRay(new Prism() { RayId = RayId, UserId = CurrentUser.Id }); 
             UpdatedRays?.Invoke();
         }
 
         public async Task UnPrismRay(int RayId)
         {
-            if (CurrentUser.Id == 0) await GetOrCreateUser();
+            if (CurrentUser.Id == 0) 
+                navigationManager.NavigateTo("/login");
             Rays = await apiService.UnPrismRay(RayId, CurrentUser.Id); 
             UpdatedRays?.Invoke();
         }
-
-        public async Task<User> GetOrCreateUser(string newName = null)
-        {
-            var name = newName ?? CurrentUser.Name;
-            CurrentUser = await apiService.GetUser(name);
-            return CurrentUser;
-        }
-       
     }
 }

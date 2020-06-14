@@ -18,7 +18,11 @@
     </ExpectedOutput>
      @code
         {
-            void Setup(SnapshotTest test) { test.Services.AddSingleton<IDataService, TestDataService>(); }
+            void Setup(SnapshotTest test) 
+                { 
+                    test.Services.AddSingleton<IDataService, TestDataService>(); 
+                    test.Services.AddSingleton<ILocalStorageService,TestLocalStorage>();
+                }
         }
 </SnapshotTest>
 
@@ -65,6 +69,7 @@
         // Arrange
         var dataService = new TestDataService();
         fixture.Services.AddSingleton<IDataService>(dataService);
+        fixture.Services.AddSingleton<ILocalStorageService,TestLocalStorage>();
         var cut = fixture.GetComponentUnderTest<RayInput>();
 
         bool updateTriggered = false;
@@ -84,6 +89,7 @@
         // Arrange
         var dataService = new TestDataService();
         fixture.Services.AddSingleton<IDataService>(dataService);
+        fixture.Services.AddSingleton<ILocalStorageService,TestLocalStorage>();
         var cut = fixture.GetComponentUnderTest<RayInput>();
 
         bool updateTriggered = false;

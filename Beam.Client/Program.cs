@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Beam.Client.Services;
+using Blazored.LocalStorage;
 
 namespace Beam.Client
 {
@@ -21,6 +22,7 @@ namespace Beam.Client
                 });
             builder.Services.AddTransient<IBeamApiService, BeamApiService>();
             builder.Services.AddSingleton<IDataService, DataService>();
+            builder.Services.AddBlazoredLocalStorage();
             await builder.Build().RunAsync();
         }
     }

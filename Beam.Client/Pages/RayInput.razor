@@ -1,5 +1,5 @@
 @inject IDataService data;
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <p>
     <Card Title="Cast a New Ray">
@@ -20,11 +20,6 @@
 @code{
     [Parameter]
     public RayToCast newRay { get; set; } = new RayToCast();
-
-    async Task NewRayTextUpdated(ChangeEventArgs e)
-    {
-        await localStorage.SetItemAsync(nameof(newRayText), e.Value);
-    }
 
     [Parameter]
     public EventCallback<RayToCast> newRayChanged { get; set; }

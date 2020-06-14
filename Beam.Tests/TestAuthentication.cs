@@ -107,18 +107,19 @@ namespace Beam.Tests.Auth
     public class NonAuthenticatedPrincipal : IPrincipal
     {
         public IIdentity Identity => null;
-
         public bool IsInRole(string role)
         {
             return false;
         }
+
     }
 
     public static class AuthExtensions
     {
-        public static void AddAuthenticationServices(this TestServiceProvider services, Task<AuthenticationState> initialAuthState = null)
+        public static void AddAuthenticationServices(this TestServiceProvider services, Task<AuthenticationState> initialAuthState = null, AuthorizationResult nextAuth = null)
         {
-            services.AddSingleton<IAuthorizationService>(new TestAuthorizationService());
+            if (nextAuth == null) nextAuth = AuthorizationResult.Success();
+            services.AddSingleton<IAuthorizationService>(new TestAuthorizationService() { NextResult = nextAuth });
             services.AddSingleton<IAuthorizationPolicyProvider>(new TestAuthorizationPolicyProvider());
             services.AddSingleton<AuthenticationStateProvider>(new TestAuthenticationStateProvider(initialAuthState));
         }

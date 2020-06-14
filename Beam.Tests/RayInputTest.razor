@@ -17,6 +17,9 @@
     </ExpectedOutput>
      @code
         {
-            void Setup(SnapshotTest test) { test.Services.AddSingleton<IDataService, TestDataService>(); }
+            void Setup(SnapshotTest test) { 
+                test.Services.AddSingleton<ILocalStorageService,TestLocalStorage>();
+                test.Services.AddSingleton<IDataService, TestDataService>(); 
+            }
         }
 </SnapshotTest>

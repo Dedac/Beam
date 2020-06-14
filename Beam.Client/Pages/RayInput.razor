@@ -1,8 +1,10 @@
 @inject IDataService data;
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 <p>
     <Card Title="Cast a New Ray">
             <div class="input-group">
-                <input @bind="newRayText" class="form-control" />
+                <input @bind="newRayText" class="form-control" @oninput="NewRayTextUpdated" />
                 <div class="input-group-append">
                     <button @onclick="ClearText" type="button" class="btn btn-outline-secondary"><span class="oi oi-circle-x"></span></button>
                     <button @onclick="CastRay" type="button" class="btn btn-outline-secondary"><span class="oi oi-audio"></span></button>
@@ -13,23 +15,36 @@
 
 @code{
     [Parameter]
-    public string newRayText { get; set; }
+    public string newRayText {get;set;}
+
+    async Task NewRayTextUpdated(ChangeEventArgs e)
+    {
+        await localStorage.SetItemAsync(nameof(newRayText), e.Value);
+    }
 
     [Parameter]
-    public EventCallback<string> newRayTextChanged {get;set;}
+    public EventCallback<string> newRayTextChanged { get; set; }
 
     [Parameter]
-    public EventCallback<string> RayCast {get;set;}
+    public EventCallback<string> RayCast { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var storedRayText = await localStorage.GetItemAsync<string>(nameof(newRayText));
+        if (!string.IsNullOrWhiteSpace(storedRayText))
+            newRayText = storedRayText;
+    }
 
     async Task CastRay()
     {
-        await RayCast.InvokeAsync(newRayText);        
+        await RayCast.InvokeAsync(newRayText);
         await data.CreateRay(newRayText);
-        newRayText = "";
+        await ClearText();
     }
 
-    void ClearText()
+    async Task ClearText()
     {
+        await localStorage.SetItemAsync(nameof(newRayText), "");
         newRayText = "";
     }
 }

@@ -25,13 +25,13 @@ namespace Beam.Tests
             list.AddRange(Frequencies);
             list.Add(new Frequency(){Id = Frequencies.Max(f => f.Id) + 1, Name = Name });
             Frequencies = list;
-            UdpatedFrequencies.Invoke();
+            UdpatedFrequencies?.Invoke();
             return Task.CompletedTask;
         }
 
         public Task CreateRay(string text)
         {
-            UpdatedRays.Invoke();
+            UpdatedRays?.Invoke();
             return Task.CompletedTask;
         }
 
@@ -47,7 +47,7 @@ namespace Beam.Tests
 
         public Task GetRays(int FrequencyId)
         {
-            UpdatedRays.Invoke();
+            UpdatedRays?.Invoke();
             return Task.CompletedTask;
         }
 

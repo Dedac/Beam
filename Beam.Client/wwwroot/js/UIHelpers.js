@@ -4,5 +4,8 @@ window.UIHelpers = {
     },
     focusFirstChild : function (element) {
         element.firstElementChild.focus();
+    },
+    animateElement : function (element, keyFrames, speed) {
+        element.firstElementChild.animate(keyFrames, speed);
     }
   }

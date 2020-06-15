@@ -1,11 +1,11 @@
 @inject IDataService data;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
-
+@inject IJSRuntime jsRuntime;
 <p>
     <Card Title="Cast a New Ray">
-        <EditForm OnValidSubmit="CastRay" Model="@newRay">
+        <EditForm OnValidSubmit="CastRay" Model="@newRay" OnInvalidSubmit="FocusInput">
             <DataAnnotationsValidator />
-            <div class="input-group">
+            <div class="input-group" @ref="RayInputGroup">
                 <InputTextArea @bind-Value="newRay.Text" class="form-control" @oninput="NewRayTextUpdated" />
                 <div class="input-group-append">
                     <button @onclick="ClearText" type="button" class="btn btn-outline-secondary"><span class="oi oi-circle-x"></span></button>
@@ -27,13 +27,25 @@
     [Parameter]
     public EventCallback<string> RayCast { get; set; }
 
+    ElementReference RayInputGroup;
     protected override async Task OnParametersSetAsync()
     {
         var storedRayText = await localStorage.GetItemAsync<string>(nameof(newRay.Text));
         if (!string.IsNullOrWhiteSpace(storedRayText))
             newRay.Text = storedRayText;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) 
+    {        
+        await FocusInput();
+    }
+
+    async Task FocusInput()
+    {
+        await jsRuntime.InvokeVoidAsync("UIHelpers.focusFirstChild", RayInputGroup);
 
     }
+
     async Task NewRayTextUpdated(ChangeEventArgs e)
     {
         await localStorage.SetItemAsync(nameof(newRay.Text), e.Value);

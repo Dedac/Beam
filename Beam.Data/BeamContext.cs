@@ -21,6 +21,8 @@ namespace Beam.Data
             modelBuilder.Entity<Prism>()
                 .Property(p => p.PrismDate)
                 .HasDefaultValueSql("getdate()");
+            
+            base.OnModelCreating(modelBuilder);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

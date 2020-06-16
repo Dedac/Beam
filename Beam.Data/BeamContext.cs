@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Beam.Data
 {
@@ -11,7 +13,15 @@ namespace Beam.Data
         public DbSet<Ray> Rays { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Prism> Prisms { get; set; }
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Ray>()
+                .Property(r => r.CastDate)
+                .HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<Prism>()
+                .Property(p => p.PrismDate)
+                .HasDefaultValueSql("getdate()");
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
@@ -21,7 +31,7 @@ namespace Beam.Data
     {
         public int FrequencyId { get; set; }
         public string Name { get; set; }
-        public List<Ray> Rays { get; set;}
+        public List<Ray> Rays { get; set; }
     }
 
     public class User
@@ -41,6 +51,8 @@ namespace Beam.Data
         public List<Prism> Prisms { get; set; }
         public int? UserId { get; set; }
         public User User { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime CastDate { get; set; }
     }
 
     public class Prism
@@ -50,6 +62,8 @@ namespace Beam.Data
         public User User { get; set; }
         public int RayId { get; set; }
         public Ray Ray { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime PrismDate { get; set; }
     }
 
 }

@@ -14,6 +14,7 @@ namespace Beam.Server.Mappers
                 PrismCount = r.Prisms.Count,
                 UserId = r.UserId ?? 0,
                 UserName = r.User?.Username ?? "[missing]",
+                RayCastDate = r.CastDate,
                 UsersPrismed = r.Prisms.Select(p => p.User.Username).ToList()
             };
         }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Beam.Server.Mappers;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Beam.Server.Controllers
 {
@@ -22,6 +23,15 @@ namespace Beam.Server.Controllers
         {
             return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
                 .Where(r => r.User.Username == name)
+                .Select(r => r.ToShared()).ToList();
+        }
+
+        [HttpGet("user/{name}/{start}/{end}")]
+        public List<Ray> GetRaysByUserAndDateRange(string name, DateTime start, DateTime end)
+        {
+            return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
+                .Where(r => r.User.Username == name)
+                .Where(r => r.CastDate > start && r.CastDate < end)
                 .Select(r => r.ToShared()).ToList();
         }
 

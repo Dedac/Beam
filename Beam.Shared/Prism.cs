@@ -8,5 +8,6 @@ namespace Beam.Shared
     {
         public int RayId { get; set; }
         public int UserId { get; set; }
+        public DateTime PrismDate { get; set; }
     }
 }

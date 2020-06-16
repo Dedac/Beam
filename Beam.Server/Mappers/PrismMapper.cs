@@ -7,7 +7,8 @@
             return new Shared.Prism()
             {
                 RayId = p.RayId,
-                UserId = p.UserId
+                UserId = p.UserId,
+                PrismDate = p.PrismDate
             };
         }
         public static Data.Prism ToData(this Shared.Prism p)

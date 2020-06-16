@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Beam.Shared
 {
@@ -11,5 +12,6 @@ namespace Beam.Shared
         public string UserName { get; set; }
         public int PrismCount { get; set; }
         public List<string> UsersPrismed { get; set; }
+        public DateTime RayCastDate { get; set; }
     }
 }

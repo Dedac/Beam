@@ -1,22 +1,52 @@
 @layout UserLayout
 @page "/User"
 @page "/User/{Name}"
-@using Beam.Shared;
-@inject IDataService data;
+@using Beam.Shared
+@inject IDataService data
 <h2>User Rays</h2>
-@foreach (var ray in Rays)
-{
-    <p>
-        <RayItem ray="@ray" />
-    </p>
-}
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="List">
+        @foreach (var ray in Rays)
+        {
+           <p>
+               <RayItem ray="@ray" />
+          </p>
+       }
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Grid">
+               <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="4" AllowSorting="true" 
+                Data="@Rays" TItem="Ray">
+                    <Columns>
+                        <RadzenGridColumn TItem="Ray" Property="RayId" Title="Id" />
+                        <RadzenGridColumn TItem="Ray" Property="Text" Title="Text" Width="600px" />
+                        <RadzenGridColumn TItem="Ray" Property="PrismCount" Title="Times Prismed" />
+                        <RadzenGridColumn TItem="Ray" Property="RayCastDate" Title="Date">
+                            <Template Context="item">
+                                @item.RayCastDate.ToLocalTime().ToString()
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TItem="Ray" Property="UsersPrismed" Sortable="false" Title="Users Who Prismed">
+                            <Template Context="item">                                
+                                @foreach (var user in item.UsersPrismed)
+                                {
+                                       <p>@user</p>
+                                }
+                            </Template>
+                        </RadzenGridColumn>
+                    </Columns>
+               </RadzenGrid>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
 
 @code{
     [Parameter]
-    public string Name {get;set;}
+    public string Name { get; set; }
 
     List<Ray> Rays = new List<Ray>();
-    
+
     protected override async Task OnParametersSetAsync()
     {
         Rays = await data.GetUserRays(Name);

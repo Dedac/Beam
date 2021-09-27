@@ -1,5 +1,5 @@
 # Blazor Beams!
-## A Demo Application for Blazor, The best / worst pun-focused social media application ever. ##
+## A Demo Application for Blazor, The best/worst pun-focused social media application ever. ##
 
 - Blazor WebAssembly Client
 - Hosted in ASP.Net core, with a Web Api backend

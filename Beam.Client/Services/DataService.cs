@@ -9,7 +9,7 @@ namespace Beam.Client.Services
     public class DataService
     {
         private readonly BeamApiService _apiService;
-        public IReadOnlyList<Frequency> Frequencies { get; private set; }
+        public IReadOnlyList<Frequency> Frequencies { get; private set; } = new List<Frequency>();
         public IReadOnlyList<Ray> Rays { get; private set; } = new List<Ray>();
         public User CurrentUser { get; set; }
 
@@ -37,8 +37,8 @@ namespace Beam.Client.Services
             if (CurrentUser == null) CurrentUser = new User() { Name = "Anon" + new Random().Next(0, 10) };
         }
 
-        public event Action UdpatedFrequencies;
-        public event Action UpdatedRays;
+        public event Action? UdpatedFrequencies;
+        public event Action? UpdatedRays;
 
         public async Task GetFrequencies()
         {
@@ -63,7 +63,7 @@ namespace Beam.Client.Services
         {
             var ray = new Ray()
             {
-                FrequencyId = selectedFrequency.Value,
+                FrequencyId = selectedFrequency ?? 0,
                 Text = text,
                 UserId = CurrentUser.Id
             };
@@ -78,7 +78,7 @@ namespace Beam.Client.Services
             UpdatedRays?.Invoke();
         }
 
-        public async Task GetOrCreateUser(string newName = null)
+        public async Task GetOrCreateUser(string? newName = null)
         {
             CurrentUser = await _apiService.GetOrCreateUser(newName ?? CurrentUser.Name); 
         }

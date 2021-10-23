@@ -2,27 +2,19 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Beam.Client;
 using Beam.Client.Services;
 
-namespace Beam.Client
-{
-    public class Program
-    {
-        public static async Task Main(string[] args)
-        {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("app");
-            builder.Services.AddSingleton(
-                new HttpClient
-                {
-                    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-                });
-            builder.Services.AddTransient<BeamApiService>();
-            builder.Services.AddSingleton<DataService>();
-            builder.Services.AddSingleton<Animation.Javascript>();
-            await builder.Build().RunAsync();
-        }
-    }
-}
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+builder.Services.AddScoped<BeamApiService>();
+builder.Services.AddSingleton<DataService>();
+builder.Services.AddSingleton<Beam.Animation.Javascript>();
+await builder.Build().RunAsync();

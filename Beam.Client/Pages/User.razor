@@ -15,7 +15,7 @@
 }
 @code {
     [Parameter]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     List<Ray> Rays = new List<Ray>();
 
@@ -27,7 +27,7 @@
 
     async void UpdateUserRays()
     {
-        Rays = await data.GetUserRays(Name);
+        Rays = await data.GetUserRays(Name ?? "");
         StateHasChanged();
     }
 }

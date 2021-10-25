@@ -4,7 +4,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Configuration.add
 builder.Services.AddRazorPages();
 builder.Services.ConfigureData(builder.Configuration.GetConnectionString("DefaultConnection")); 
 

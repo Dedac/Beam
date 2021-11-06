@@ -1,4 +1,3 @@
-#!/bin/bash
 cd /workspace
 dotnet restore
 cd Beam.Server

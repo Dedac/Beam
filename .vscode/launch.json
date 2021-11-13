@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Beam.Server/bin/Debug/netcoreapp3.1/Beam.Server.dll",
+            "program": "${workspaceFolder}/Beam.Server/bin/Debug/net6.0/Beam.Server.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Beam.Server",
             "stopAtEntry": false,
@@ -29,7 +29,7 @@
             "request": "launch",
             "type": "pwa-chrome",
             "url": "http://localhost:5000",
-            "webRoot": "${workspaceFolder}/Beam.Server/bin/Debug/netcoreapp3.1"
+            "webRoot": "${workspaceFolder}/Beam.Server/bin/Debug/net6.0"
         }
     ]
 }

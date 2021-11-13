@@ -27,6 +27,8 @@ namespace Beam.Server.Controllers
 
             var prismRay = _context.Rays.Find(newPrism.RayId);
 
+            if (prismRay == null) return new List<Ray>();
+
             return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
                 .Where(r => r.FrequencyId == prismRay.FrequencyId)
                 .Select(r => r.ToShared())

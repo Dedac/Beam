@@ -13,10 +13,10 @@
 
 @code{
     [Parameter]
-    public string newRayText { get; set; }
+    public string newRayText { get; set; } = "";
 
     [Parameter]
-    public Action<string> newRayTextChanged { get; set; }
+    public Action<string>? newRayTextChanged { get; set; }
 
     async Task CastRay()
     {

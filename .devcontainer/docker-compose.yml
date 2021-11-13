@@ -6,11 +6,11 @@
 version: '3'
 services:
   sql:
-    image: "mcr.microsoft.com/mssql/server"
+    image: "mcr.microsoft.com/azure-sql-edge"
     environment:
         #Never open your dev env sql container publicly 
-        SA_PASSWORD: "@#^!fcIen&*asd"
-        ACCEPT_EULA: "Y"
+        MSSQL_SA_PASSWORD: "@#^!fcIen&*asd"
+        ACCEPT_EULA: "1"
   beam:
     build:
       context: .

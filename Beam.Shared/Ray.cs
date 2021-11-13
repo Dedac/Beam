@@ -10,6 +10,6 @@ namespace Beam.Shared
         public int UserId { get; set; }
         public string UserName { get; set; }
         public int PrismCount { get; set; }
-        public List<string> UsersPrismed { get; set; }
+        public List<string> UsersPrismed { get; set; } = new List<string>();
     }
 }

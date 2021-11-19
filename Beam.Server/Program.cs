@@ -1,4 +1,5 @@
 ﻿using Beam.Data;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,5 +28,5 @@ app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();
-app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("{*path:regex(^(?!api).*$)}", "index.html");
 app.Run();

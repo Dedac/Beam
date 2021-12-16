@@ -18,6 +18,17 @@
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
+		"mssql.connections": [
+			{
+				"server": "sql",
+				"database": "Beam",
+				"authenticationType": "SqlLogin",
+				"user": "sa",
+				"password": "@#^!fcIen&*asd",
+				"emptyPasswordInput": false,
+				"savePassword": true
+			}
+		]
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.

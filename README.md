@@ -7,4 +7,4 @@
 - EF Core
 - dotnet 6
 
-Develop, Build and Run in a container locally (with docker desktop and the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension or in [Codespaces](https://github.com/features/codespaces)
+Develop, Build and Run in a container locally (with docker desktop and the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension or in [Codespaces](https://github.com/features/codespaces) - Now prebuilt!

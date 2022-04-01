@@ -43,16 +43,20 @@ namespace Beam.Server.Controllers
             return newUser.ToShared();
         }
 
-        private async static Task<Octokit.User> RetrieveGitHubUser(string Username)
+        private async static Task<Octokit.User?> RetrieveGitHubUser(string Username)
         {
             //Altered so it isn't "real"
-            //var GHAccess = "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";
+            var GHAccess = "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";
             // get user from github api and return user object
             var GHClient = new GitHubClient(new ProductHeaderValue("Beam"));
-            //GHClient.Credentials = new Credentials(GHAccess);
-            var other = await GHClient.Miscellaneous.GetRateLimits();
-            
-            return await GHClient.User.Get(Username);
+            GHClient.Credentials = new Credentials(GHAccess);
+            var limits = await GHClient.Miscellaneous.GetRateLimits();
+            if (limits?.Rate?.Remaining == null || limits.Rate.Remaining > 0)
+            {
+                var ghUser = await GHClient.User.Get(Username);
+                return ghUser;
+            }
+            return null;
         }
     }
 }

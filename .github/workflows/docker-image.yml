@@ -2,11 +2,11 @@ name: Docker Image CI
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+    inputs:
+      version:
+        type: text
+        required: true
+  
 jobs:
 
   build-publish:
@@ -14,8 +14,30 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: docker/login-action@v1.14.1
+      with: 
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+          
+    - name: Lowercase the repo name
+      run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+        
+    - name: docker publish
+    - run: |
+        VERSION="${{ github.event.inputs.version }}"
+        echo "::set-output name=semver::$(echo $VERSION)"
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        VERSION=docker-compose -f .devcontainer/docker-compose.yml up --no-start --remove-orphans
+        IMAGES=$(docker inspect --format='{{.Image}}' $(docker ps -aq))
 
-    - uses: pennsignals/publish_docker-compose@v0.1.1
-      with:
-        docker_compose: '.devcontainer/docker-compose.yml' # required
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        echo "IMAGES: $IMAGES"
+        for IMAGE in $IMAGES; do
+          echo "IMAGE: $IMAGE"
+    
+          NAME=$(basename ${{ env.REPO }}).$(docker inspect --format '{{ index .Config.Labels "name" }}' $IMAGE)
+          TAG="ghcr.io/${{ env.REPO }}/$NAME:${{github.event.inputs.version}}"
+
+          docker tag $IMAGE $TAG
+          docker push $TAG
+        done

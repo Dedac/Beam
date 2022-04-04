@@ -8,7 +8,6 @@ on:
         required: true
   
 jobs:
-
   build-publish:
     runs-on: ubuntu-latest
 
@@ -30,14 +29,11 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
         VERSION=docker-compose -f .devcontainer/docker-compose.yml up --no-start --remove-orphans
         IMAGES=$(docker inspect --format='{{.Image}}' $(docker ps -aq))
-
         echo "IMAGES: $IMAGES"
         for IMAGE in $IMAGES; do
           echo "IMAGE: $IMAGE"
-    
           NAME=$(basename ${{ env.REPO }}).$(docker inspect --format '{{ index .Config.Labels "name" }}' $IMAGE)
           TAG="ghcr.io/${{ env.REPO }}/$NAME:${{github.event.inputs.version}}"
-
           docker tag $IMAGE $TAG
           docker push $TAG
         done

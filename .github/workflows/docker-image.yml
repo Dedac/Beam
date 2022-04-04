@@ -1,6 +1,7 @@
 name: Docker Image CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
   pull_request:
@@ -8,11 +9,30 @@ on:
 
 jobs:
 
-  build:
-
+  build-publish:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file .devcontainer/Dockerfile --tag my-image-name:$(date +%s)
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@v1.14.1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v3.6.2
+      with:
+        images: |
+          ghcr.io/${{ github.repository }}
+      
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v2.10.0
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}

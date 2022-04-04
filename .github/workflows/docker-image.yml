@@ -23,7 +23,7 @@ jobs:
       run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
         
     - name: docker publish
-    - run: |
+      run: |
         VERSION="${{ github.event.inputs.version }}"
         echo '::set-output name=semver::$(echo $VERSION)'
         echo "VERSION=$VERSION" >> $GITHUB_ENV

@@ -32,9 +32,9 @@ jobs:
     - name: tag and push
       run: |
         TAG="ghcr.io/${{ env.REPO }}/beamdb:${{github.event.inputs.version}}"
-        docker tag beamdb $TAG
+        docker tag "mcr.microsoft.com/azure-sql-edge" $TAG
         docker push $TAG
-        
+
         TAG="ghcr.io/${{ env.REPO }}/beam:${{github.event.inputs.version}}"
-        docker tag beam $TAG
+        docker tag "devcontainer_beam" $TAG
         docker push $TAG

@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
 #-------------------------------------------------------------------------------------------------------------
-
+LABEL "name"="Beam"
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal
 RUN apt-get update && apt-get install -y gnupg2
 RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | apt-key add -

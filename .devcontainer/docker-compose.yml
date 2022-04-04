@@ -7,6 +7,7 @@ version: '3'
 services:
   sql:
     image: "mcr.microsoft.com/azure-sql-edge"
+    container_name: beamdb
     environment:
         #Never open your dev env sql container publicly 
         MSSQL_SA_PASSWORD: "@#^!fcIen&*asd"
@@ -14,7 +15,7 @@ services:
   beam:
     build:
       context: .
-
+    container_name: beam
     volumes:
       # Update this to wherever you want VS Code to mount the folder of your project
       - ..:/workspace:cached

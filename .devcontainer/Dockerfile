@@ -9,4 +9,3 @@ RUN curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | tee /etc
 RUN apt-get update 
 #mssql tools isn't available for arm64 / aarch64
 RUN if [ $(arch) != "aarch64" ]; then ACCEPT_EULA=Y apt-get install mssql-tools unixodbc-dev -y; fi
-LABEL name="beam"

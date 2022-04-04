@@ -27,7 +27,7 @@ jobs:
         VERSION="${{ github.event.inputs.version }}"
         echo '::set-output name=semver::$(echo $VERSION)'
         echo "VERSION=$VERSION" >> $GITHUB_ENV
-        VERSION=docker-compose -f .devcontainer/docker-compose.yml up --no-start --remove-orphans
+        VERSION=$VERSION docker-compose -f .devcontainer/docker-compose.yml up --no-start --remove-orphans
         IMAGES=$(docker inspect --format='{{.Image}}' $(docker ps -aq))
         echo 'IMAGES: $IMAGES'
         for IMAGE in $IMAGES; do

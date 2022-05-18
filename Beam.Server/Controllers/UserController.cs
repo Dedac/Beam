@@ -46,7 +46,7 @@ namespace Beam.Server.Controllers
         private async static Task<Octokit.User?> RetrieveGitHubUser(string Username)
         {
             //Altered so it isn't "real"
-            var GHAccess = "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";
+            var GHAccess = "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";
             // get user from github api and return user object
             var GHClient = new GitHubClient(new ProductHeaderValue("Beam"));
             GHClient.Credentials = new Credentials(GHAccess);

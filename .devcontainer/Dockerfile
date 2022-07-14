@@ -1,11 +1,19 @@
-#-------------------------------------------------------------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
-#-------------------------------------------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/sdk:6.0-focal
-RUN apt-get update && apt-get install -y gnupg2
-RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | apt-key add -
-RUN curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | tee /etc/apt/sources.list.d/msprod.list
-RUN apt-get update 
-#mssql tools isn't available for arm64 / aarch64
-RUN if [ $(arch) != "aarch64" ]; then ACCEPT_EULA=Y apt-get install mssql-tools unixodbc-dev -y; fi
+# [Choice] .NET version: 6.0-focal, 3.1-focal
+ARG VARIANT="6.0-focal"
+FROM mcr.microsoft.com/vscode/devcontainers/dotnet:0-${VARIANT}
+
+# [Choice] Node.js version: none, lts/*, 18, 16, 14
+ARG NODE_VERSION="none"
+RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
+
+# Install SQL Tools: SQLPackage and sqlcmd
+COPY mssql/installSQLtools.sh installSQLtools.sh
+RUN bash ./installSQLtools.sh \
+     && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
+
+# [Optional] Uncomment this section to install additional OS packages.
+# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+#     && apt-get -y install --no-install-recommends <your-package-list-here>
+
+# [Optional] Uncomment this line to install global node packages.
+# RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1

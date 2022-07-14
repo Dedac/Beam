@@ -16,7 +16,7 @@ namespace Beam.Server.Controllers
         }
 
         [HttpGet("[action]/{Username}")]
-        public User Get(string Username)
+        public Beam.Shared.User Get(string Username)
         {
             var existingUser = _context.Users.FirstOrDefault(u => u.Username == Username);
 

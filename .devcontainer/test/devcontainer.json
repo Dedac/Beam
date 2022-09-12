@@ -31,6 +31,19 @@
 		]
 	},
 
+	"customizations": {
+		"codespaces": {
+			"repositories": {
+				"dotnet/core":{
+					"permissions": {
+						"contents": "read",
+						"packages": "read",
+						"pull_requests": "write"
+					  }
+				}
+			}
+		}
+	},
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-dotnettools.csharp",

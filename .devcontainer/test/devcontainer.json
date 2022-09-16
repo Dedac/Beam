@@ -36,9 +36,7 @@
 			"repositories": {
 				"github/octodex":{
 					"permissions": {
-						"contents": "read",
-						"packages": "read",
-						"pull_requests": "read"
+						"contents": "read"
 					  }
 				}
 			}

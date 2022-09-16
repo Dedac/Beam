@@ -34,7 +34,7 @@
 	"customizations": {
 		"codespaces": {
 			"repositories": {
-				"dotnet/core":{
+				"github/octodex":{
 					"permissions": {
 						"contents": "read",
 						"packages": "read",

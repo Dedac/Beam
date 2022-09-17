@@ -32,18 +32,6 @@
 		"ms-mssql.mssql",
 		"ms-dotnettools.blazorwasm-companion"
 	],
-	"customizations": {
-		"codespaces": {
-			"repositories": {
-				"octodemo/octodemo-twitch": {
-					"permissions": {
-						"contents": "read",
-						"pull_requests": "write"
-					}
-				}
-			}
-		}
-	},
 
 	"onCreateCommand": "/bin/bash ./.devcontainer/on-create.sh > on-create.log 2>&1"
 }

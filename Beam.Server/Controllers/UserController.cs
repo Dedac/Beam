@@ -1,6 +1,7 @@
 ﻿using Beam.Server.Mappers;
 using Beam.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace Beam.Server.Controllers
@@ -18,7 +19,8 @@ namespace Beam.Server.Controllers
         [HttpGet("[action]/{Username}")]
         public User Get(string Username)
         {
-            var existingUser = _context.Users.FirstOrDefault(u => u.Username == Username);
+            var existingUser = _context.Users.FromSqlRaw($"SELECT top 1 * FROM dbo.Users where Username = '{Username}'" ).FirstOrDefault();
+            //var existingUser = _context.Users.FirstOrDefault(u => u.Username == Username);
 
             if (existingUser != null) return existingUser.ToShared();
 

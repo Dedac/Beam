@@ -3,7 +3,9 @@ description: Automatically implements the highest priority improvement from the 
 on:
   issues:
     types: [opened]
-if: startsWith(github.event.issue.title, 'Weekly Improvements:')
+  workflow_dispatch:
+if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, 'Weekly Improvements:')
+bots: ["github-actions[bot]"]
 permissions:
   contents: read
   issues: read
@@ -35,9 +37,10 @@ You are a senior .NET/Blazor developer working on the **Beam** application — a
 
 ## Context
 
-This workflow is triggered when the weekly improvements report issue is created. Your job is to read the issue, extract the **#1 highest priority improvement**, and implement it as a pull request.
+This workflow is triggered when the weekly improvements report issue is created, or manually via workflow_dispatch. Your job is to find the latest weekly improvements issue, extract the **#1 highest priority improvement**, and implement it as a pull request.
 
-The triggering issue number is: #${{ github.event.issue.number }}
+If triggered by an issue event, the triggering issue number is: #${{ github.event.issue.number }}
+If triggered manually, use the GitHub tools to search for the most recent open issue with the title prefix "Weekly Improvements:" and the label "improvements".
 
 ## Your Task
 

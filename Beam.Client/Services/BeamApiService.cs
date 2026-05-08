@@ -40,7 +40,9 @@ namespace Beam.Client.Services
 
         internal async Task<User> GetOrCreateUser(string name)
         {
-            return (await http.GetFromJsonAsync<User>($"api/User/Get/{name}")) ?? new User();
+            var resp = await http.PostAsync($"api/User/Get/{name}", null);
+            resp.EnsureSuccessStatusCode();
+            return (await resp.Content.ReadFromJsonAsync<User>()) ?? new User();
         }
 
         internal async Task<List<Ray>> PrismRay(Prism prism)
@@ -51,7 +53,9 @@ namespace Beam.Client.Services
 
         internal async Task<List<Ray>> UnPrismRay(int rayId, int userId)
         {
-            return (await http.GetFromJsonAsync<List<Ray>>($"api/Prism/Remove/{userId}/{rayId}")) ?? new List<Ray>();
+            var resp = await http.DeleteAsync($"api/Prism/Remove/{userId}/{rayId}");
+            resp.EnsureSuccessStatusCode();
+            return (await resp.Content.ReadFromJsonAsync<List<Ray>>()) ?? new List<Ray>();
         }
 
         internal async Task<List<Ray>> UserRays(string name)

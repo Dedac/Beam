@@ -16,18 +16,13 @@ namespace Beam.Server.Controllers
         }
 
         [HttpGet("[action]/{Username}")]
-        public User Get(string Username)
+        public ActionResult<User> Get(string Username)
         {
             var existingUser = _context.Users.FirstOrDefault(u => u.Username == Username);
 
-            if (existingUser != null) return existingUser.ToShared();
+            if (existingUser == null) return NotFound();
 
-            var newUser = new Data.User() { Username = Username };
-
-            _context.Add(newUser);
-            _context.SaveChanges();
-
-            return newUser.ToShared(); 
+            return existingUser.ToShared();
         }
 
     }

@@ -11,7 +11,10 @@ namespace Beam.Client.Services
         private readonly BeamApiService _apiService;
         public IReadOnlyList<Frequency> Frequencies { get; private set; } = new List<Frequency>();
         public IReadOnlyList<Ray> Rays { get; private set; } = new List<Ray>();
-        public User CurrentUser { get; set; }
+
+        public User? CurrentUser { get; private set; }
+        public bool IsSignedIn => CurrentUser != null;
+        public string CurrentUserName => CurrentUser?.Name ?? string.Empty;
 
         private int? selectedFrequency;
         public int SelectedFrequency
@@ -34,11 +37,15 @@ namespace Beam.Client.Services
         public DataService(BeamApiService apiService)
         {
             _apiService = apiService;
-            if (CurrentUser == null) CurrentUser = new User() { Name = "Anon" + new Random().Next(0, 10) };
         }
 
         public event Action? UdpatedFrequencies;
         public event Action? UpdatedRays;
+
+        public void SetCurrentUser(User? user)
+        {
+            CurrentUser = user;
+        }
 
         public async Task GetFrequencies()
         {
@@ -55,51 +62,53 @@ namespace Beam.Client.Services
 
         public async Task AddFrequency(string Name)
         {
-            Frequencies = await _apiService.AddFrequency(new Frequency() { Name = Name });  
+            if (!IsSignedIn || string.IsNullOrWhiteSpace(Name)) return;
+
+            var frequencies = await _apiService.AddFrequency(new Frequency() { Name = Name });
+
+            if (frequencies == null) return;
+
+            Frequencies = frequencies;
             UdpatedFrequencies?.Invoke();
         }
 
         public async Task CreateRay(string text)
         {
+            if (!IsSignedIn) return;
+
             var ray = new Ray()
             {
                 FrequencyId = selectedFrequency ?? 0,
-                Text = text,
-                UserId = CurrentUser.Id
+                Text = text
             };
-
-            if (CurrentUser.Id == 0)
-            {
-                await GetOrCreateUser();
-                ray.UserId = CurrentUser.Id;
-            }
 
             Rays = await _apiService.AddRay(ray); 
             UpdatedRays?.Invoke();
         }
 
-        public async Task GetOrCreateUser(string? newName = null)
-        {
-            CurrentUser = await _apiService.GetOrCreateUser(newName ?? CurrentUser.Name); 
-        }
-
         public async Task PrismRay(int RayId)
         {
-            if (CurrentUser.Id == 0) await GetOrCreateUser();
-            Rays = await _apiService.PrismRay(new Prism() { RayId = RayId, UserId = CurrentUser.Id }); 
+            if (!IsSignedIn) return;
+
+            Rays = await _apiService.PrismRay(new Prism() { RayId = RayId });
             UpdatedRays?.Invoke();
         }
 
         public async Task UnPrismRay(int RayId)
         {
-            if (CurrentUser.Id == 0) await GetOrCreateUser();
-            Rays = await _apiService.UnPrismRay(RayId, CurrentUser.Id); 
+            if (!IsSignedIn) return;
+
+            Rays = await _apiService.UnPrismRay(RayId);
             UpdatedRays?.Invoke();
         }
 
         public async Task<List<Ray>> GetUserRays(string name)
         {
-            return await _apiService.UserRays(name ?? CurrentUser.Name); 
+            var userName = string.IsNullOrWhiteSpace(name) ? CurrentUserName : name;
+
+            if (string.IsNullOrWhiteSpace(userName)) return new List<Ray>();
+
+            return await _apiService.UserRays(userName);
         }
 
     }

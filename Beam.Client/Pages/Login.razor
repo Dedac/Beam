@@ -1,0 +1,71 @@
+@page "/login"
+@inject BeamAuthenticationStateProvider auth
+@inject NavigationManager navigation
+
+<PageTitle>Sign in to BEAM</PageTitle>
+
+<h2>Sign in</h2>
+
+<EditForm Model="@request" OnValidSubmit="@SignIn">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label class="form-label" for="login-username">Username</label>
+        <InputText id="login-username" class="form-control" autocomplete="username" @bind-Value="request.Username" />
+        <ValidationMessage For="@(() => request.Username)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="login-password">Password</label>
+        <InputText id="login-password" type="password" class="form-control" autocomplete="current-password" @bind-Value="request.Password" />
+        <ValidationMessage For="@(() => request.Password)" />
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(error))
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+
+    <button class="btn btn-primary" type="submit" disabled="@busy">
+        @(busy ? "Signing in..." : "Sign in")
+    </button>
+</EditForm>
+
+<p class="mt-3">
+    Need an account? <NavLink href="@RegisterUrl">Create one</NavLink>.
+</p>
+
+@code {
+    private readonly LoginRequest request = new LoginRequest();
+    private string? error;
+    private bool busy;
+
+    [SupplyParameterFromQuery(Name = "returnUrl")]
+    public string? ReturnUrl { get; set; }
+
+    private string RegisterUrl =>
+        string.IsNullOrWhiteSpace(ReturnUrl) ? "register" : $"register?returnUrl={Uri.EscapeDataString(ReturnUrl)}";
+
+    private async Task SignIn()
+    {
+        busy = true;
+        error = null;
+
+        try
+        {
+            var result = await auth.Login(request);
+
+            if (!result.Succeeded)
+            {
+                error = result.Error;
+                return;
+            }
+
+            navigation.NavigateTo(string.IsNullOrWhiteSpace(ReturnUrl) ? "" : ReturnUrl);
+        }
+        finally
+        {
+            busy = false;
+        }
+    }
+}

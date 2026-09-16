@@ -12,14 +12,18 @@
         </div>
     }
 }
-<div class="nav-item px-3">
-    <div class="input-group">
-        <input @bind="name" placeholder="New Frequency" class="form-control" />
-        <div class="input-group-append">
-            <button @onclick="AddFrequencyClick" type="button" class="btn btn-outline-secondary"><span class="oi oi-plus"></span></button>
+<AuthorizeView>
+    <Authorized>
+        <div class="nav-item px-3">
+            <div class="input-group">
+                <input @bind="name" placeholder="New Frequency" class="form-control" />
+                <div class="input-group-append">
+                    <button @onclick="AddFrequencyClick" type="button" class="btn btn-outline-secondary"><span class="oi oi-plus"></span></button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </Authorized>
+</AuthorizeView>
 
 @code
 {

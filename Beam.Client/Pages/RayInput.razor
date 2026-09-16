@@ -1,14 +1,25 @@
 @inject DataService  data
 <p>
-    <Card Title="Cast a New Ray:">        
-        <div class="input-group">
-            <input @bind="newRayText" class="form-control" />
-            <div class="input-group-append">
-                <button @onclick="ClearText" type="button" class="btn btn-outline-secondary"><span class="oi oi-circle-x"></span></button>
-                <button @onclick="CastRay" type="button" class="btn btn-outline-secondary"><span class="oi oi-audio"></span></button>
-            </div>
-        </div>
-    </Card>
+    <AuthorizeView>
+        <Authorized>
+            <Card Title="Cast a New Ray:">
+                <div class="input-group">
+                    <input @bind="newRayText" class="form-control" />
+                    <div class="input-group-append">
+                        <button @onclick="ClearText" type="button" class="btn btn-outline-secondary"><span class="oi oi-circle-x"></span></button>
+                        <button @onclick="CastRay" type="button" class="btn btn-outline-secondary"><span class="oi oi-audio"></span></button>
+                    </div>
+                </div>
+            </Card>
+        </Authorized>
+        <NotAuthorized>
+            <Card Title="Cast a New Ray:">
+                <p>
+                    <NavLink href="login">Sign in</NavLink> or <NavLink href="register">create an account</NavLink> to cast a ray.
+                </p>
+            </Card>
+        </NotAuthorized>
+    </AuthorizeView>
 </p>
 
 @code{

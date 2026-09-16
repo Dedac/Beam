@@ -1,4 +1,5 @@
 ﻿using Beam.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,10 +47,19 @@ namespace Beam.Server.Controllers
                 .Select(r => r.ToShared()).ToList();
         }
 
+        [Authorize]
         [HttpPost("[action]")]
-        public List<Ray> Add([FromBody] Ray ray)
+        public ActionResult<List<Ray>> Add([FromBody] Ray ray)
         {
-            _context.Add(ray.ToData());
+            var userId = User.GetUserId();
+
+            if (userId == null) return Unauthorized();
+
+            var newRay = ray.ToData();
+            newRay.RayId = 0;
+            newRay.UserId = userId.Value;
+
+            _context.Add(newRay);
             _context.SaveChanges();
             return GetRays(ray.FrequencyId);
         }

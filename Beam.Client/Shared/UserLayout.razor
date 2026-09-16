@@ -2,8 +2,12 @@
 @layout MainLayout
 @inject DataService data
 
-<NavLink class="nav-link float-right"
-         href="@($"User/{data.CurrentUser.Name}")" Match="NavLinkMatch.All">
-    See Myself
-</NavLink>
+<AuthorizeView>
+    <Authorized>
+        <NavLink class="nav-link float-right"
+                 href="@($"User/{data.CurrentUserName}")" Match="NavLinkMatch.All">
+            See Myself
+        </NavLink>
+    </Authorized>
+</AuthorizeView>
 @Body

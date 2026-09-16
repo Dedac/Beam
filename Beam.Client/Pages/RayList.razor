@@ -27,9 +27,9 @@
 
     void UpdateNewRayText()
     {
-        if (!data.Rays.Any(r => r.UserName == data.CurrentUser.Name))
+        if (data.IsSignedIn && !data.Rays.Any(r => r.UserName == data.CurrentUserName))
         {
-            newRayText = $"Hello, My Name is {data.CurrentUser.Name}";
+            newRayText = $"Hello, My Name is {data.CurrentUserName}";
         }
     }
 

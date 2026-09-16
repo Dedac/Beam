@@ -1,0 +1,77 @@
+@page "/register"
+@inject BeamAuthenticationStateProvider auth
+@inject NavigationManager navigation
+
+<PageTitle>Create a BEAM account</PageTitle>
+
+<h2>Create an account</h2>
+
+<EditForm Model="@request" OnValidSubmit="@CreateAccount">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label class="form-label" for="register-username">Username</label>
+        <InputText id="register-username" class="form-control" autocomplete="username" @bind-Value="request.Username" />
+        <ValidationMessage For="@(() => request.Username)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="register-password">Password</label>
+        <InputText id="register-password" type="password" class="form-control" autocomplete="new-password" @bind-Value="request.Password" />
+        <ValidationMessage For="@(() => request.Password)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="register-confirm">Confirm password</label>
+        <InputText id="register-confirm" type="password" class="form-control" autocomplete="new-password" @bind-Value="request.ConfirmPassword" />
+        <ValidationMessage For="@(() => request.ConfirmPassword)" />
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(error))
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+
+    <button class="btn btn-primary" type="submit" disabled="@busy">
+        @(busy ? "Creating account..." : "Create account")
+    </button>
+</EditForm>
+
+<p class="mt-3">
+    Already have an account? <NavLink href="@LoginUrl">Sign in</NavLink>.
+</p>
+
+@code {
+    private readonly RegisterRequest request = new RegisterRequest();
+    private string? error;
+    private bool busy;
+
+    [SupplyParameterFromQuery(Name = "returnUrl")]
+    public string? ReturnUrl { get; set; }
+
+    private string LoginUrl =>
+        string.IsNullOrWhiteSpace(ReturnUrl) ? "login" : $"login?returnUrl={Uri.EscapeDataString(ReturnUrl)}";
+
+    private async Task CreateAccount()
+    {
+        busy = true;
+        error = null;
+
+        try
+        {
+            var result = await auth.Register(request);
+
+            if (!result.Succeeded)
+            {
+                error = result.Error;
+                return;
+            }
+
+            navigation.NavigateTo(string.IsNullOrWhiteSpace(ReturnUrl) ? "" : ReturnUrl);
+        }
+        finally
+        {
+            busy = false;
+        }
+    }
+}

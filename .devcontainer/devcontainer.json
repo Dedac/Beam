@@ -46,7 +46,7 @@
 				]
 		}
 	},
-	"forwardPorts": [ 5000 ],
+	"forwardPorts": [ 5080 ],
 
 	"onCreateCommand": "bash .devcontainer/on-create.sh ${containerWorkspaceFolder} > on-create.log 2>&1",
 	

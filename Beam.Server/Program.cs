@@ -5,7 +5,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.ConfigureData(builder.Configuration.GetConnectionString("DefaultConnection")); 
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("The DefaultConnection connection string is not configured.");
+
+if (builder.Environment.IsDevelopment())
+{
+    connectionString += ";TrustServerCertificate=True";
+}
+
+builder.Services.ConfigureData(connectionString);
 
 var app = builder.Build();
 

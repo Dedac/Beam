@@ -214,6 +214,10 @@ UpgradeLog*.htm
 *.mdf
 *.ldf
 
+# Environment-specific settings that may contain secrets
+appsettings.Production.json
+appsettings.Staging.json
+
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout

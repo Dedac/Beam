@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Beam.Server/bin/Debug/net6.0/Beam.Server.dll",
+            "program": "${workspaceFolder}/Beam.Server/bin/Debug/net10.0/Beam.Server.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Beam.Server",
             "stopAtEntry": false,

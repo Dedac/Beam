@@ -1,6 +1,12 @@
-cd /workspace
+#!/usr/bin/env bash
+set -euo pipefail
+
+workspace_folder="${1:?Workspace folder argument is required}"
+export ASPNETCORE_ENVIRONMENT=Development
+cd "$workspace_folder"
+
 dotnet restore
-cd Beam.Server
 dotnet tool restore
-dotnet ef database update 
+cd Beam.Server
+dotnet ef database update
 dotnet dev-certs https

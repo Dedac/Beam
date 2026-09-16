@@ -15,7 +15,7 @@ namespace Beam.Server.Controllers
             _context = context;
         }
 
-        [HttpGet("[action]/{Username}")]
+        [HttpPost("[action]/{Username}")]
         public User Get(string Username)
         {
             var existingUser = _context.Users.FirstOrDefault(u => u.Username == Username);

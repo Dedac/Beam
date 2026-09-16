@@ -35,7 +35,7 @@ namespace Beam.Server.Controllers
                 .ToList();
         }
 
-        [HttpGet("[action]/{UserId}/{RayId}")]
+        [HttpDelete("[action]/{UserId}/{RayId}")]
         public List<Ray> Remove(int UserId, int RayId)
         {
             var removePrisms = _context.Prisms.Include(p => p.Ray).Where(p => p.RayId == RayId && p.UserId == UserId).ToList();

@@ -15,6 +15,16 @@ namespace Beam.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>(user =>
+            {
+                user.Property(u => u.Username).HasMaxLength(32).IsRequired();
+                user.HasIndex(u => u.Username).IsUnique();
+                user.Property(u => u.PasswordHash).HasMaxLength(256);
+            });
+        }
     }
 
     public class Frequency
@@ -28,6 +38,7 @@ namespace Beam.Data
     {
         public int UserId { get; set; }
         public string Username { get; set; }
+        public string PasswordHash { get; set; }
         public List<Ray> Rays { get; set; }
         public List<Prism> Prisms { get; set; }
     }

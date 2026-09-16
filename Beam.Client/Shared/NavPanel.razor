@@ -1,4 +1,7 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject BeamAuthenticationStateProvider auth
+@inject NavigationManager navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BEAM</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -10,11 +13,32 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <Beam.Client.Pages.FrequencyList />
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="settings" Match="NavLinkMatch.All">
-                <span class="oi oi-cog" aria-hidden="true"></span> Settings
-            </NavLink>
-        </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="settings" Match="NavLinkMatch.All">
+                        <span class="oi oi-cog" aria-hidden="true"></span> Settings
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <button class="nav-link btn btn-link" type="button" @onclick="SignOut">
+                        <span class="oi oi-account-logout" aria-hidden="true"></span> Sign out (@context.User.Identity?.Name)
+                    </button>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login" Match="NavLinkMatch.All">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="register" Match="NavLinkMatch.All">
+                        <span class="oi oi-person" aria-hidden="true"></span> Create account
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
     </nav>
 </div>
 
@@ -26,5 +50,11 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task SignOut()
+    {
+        await auth.Logout();
+        navigation.NavigateTo("");
     }
 }

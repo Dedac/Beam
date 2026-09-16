@@ -1,4 +1,5 @@
 ﻿using Beam.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,17 +18,25 @@ namespace Beam.Server.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpPost("[action]")]
-        public List<Ray> Add([FromBody] Prism prism)
+        public ActionResult<List<Ray>> Add([FromBody] Prism prism)
         {
-            var newPrism = prism.ToData();
+            var userId = User.GetUserId();
 
-            _context.Add(newPrism);
-            _context.SaveChanges();
+            if (userId == null) return Unauthorized();
 
-            var prismRay = _context.Rays.Find(newPrism.RayId);
+            var prismRay = _context.Rays.Find(prism.RayId);
 
             if (prismRay == null) return new List<Ray>();
+
+            var alreadyPrismed = _context.Prisms.Any(p => p.RayId == prism.RayId && p.UserId == userId.Value);
+
+            if (!alreadyPrismed)
+            {
+                _context.Add(new Data.Prism { RayId = prism.RayId, UserId = userId.Value });
+                _context.SaveChanges();
+            }
 
             return _context.Rays.Include(r => r.Prisms).ThenInclude(p => p.User).Include(r => r.User)
                 .Where(r => r.FrequencyId == prismRay.FrequencyId)
@@ -35,11 +44,16 @@ namespace Beam.Server.Controllers
                 .ToList();
         }
 
-        [HttpGet("[action]/{UserId}/{RayId}")]
-        public List<Ray> Remove(int UserId, int RayId)
+        [Authorize]
+        [HttpGet("[action]/{RayId}")]
+        public ActionResult<List<Ray>> Remove(int RayId)
         {
-            var removePrisms = _context.Prisms.Include(p => p.Ray).Where(p => p.RayId == RayId && p.UserId == UserId).ToList();
-            if (removePrisms == null || removePrisms.Count <= 0) return new List<Ray>();
+            var userId = User.GetUserId();
+
+            if (userId == null) return Unauthorized();
+
+            var removePrisms = _context.Prisms.Include(p => p.Ray).Where(p => p.RayId == RayId && p.UserId == userId.Value).ToList();
+            if (removePrisms.Count <= 0) return new List<Ray>();
 
             var frequencyId = removePrisms.First().Ray.FrequencyId;
             _context.RemoveRange(removePrisms);

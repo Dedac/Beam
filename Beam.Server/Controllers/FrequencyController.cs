@@ -1,4 +1,5 @@
 ﻿using Beam.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace Beam.Server.Controllers
             return _context.Frequencies.Select(r => r.ToShared()).ToList();
         }
 
+        [Authorize]
         [HttpPost("[action]")]
         public List<Frequency> Add([FromBody] Frequency frequency)
         {

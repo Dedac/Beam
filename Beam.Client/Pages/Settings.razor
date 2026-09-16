@@ -1,24 +1,93 @@
 @page "/settings"
+@attribute [Authorize]
+@inject BeamAuthenticationStateProvider auth
 @inject DataService data
+@inject NavigationManager navigation
 
-<span>Username</span>
-<div class="input-group">
-    <input @bind="name" class="form-control" />
-    <div class="input-group-append">
-        <button @onclick="UpdateUser" type="button" class="btn btn-outline-secondary">Update</button>
+<PageTitle>BEAM settings</PageTitle>
+
+<h2>Settings</h2>
+
+<p>Signed in as <strong>@data.CurrentUserName</strong>.</p>
+
+<h3>Change password</h3>
+
+<EditForm Model="@request" OnValidSubmit="@ChangePassword">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label class="form-label" for="current-password">Current password</label>
+        <InputText id="current-password" type="password" class="form-control" autocomplete="current-password" @bind-Value="request.CurrentPassword" />
+        <ValidationMessage For="@(() => request.CurrentPassword)" />
     </div>
-</div>
+
+    <div class="mb-3">
+        <label class="form-label" for="new-password">New password</label>
+        <InputText id="new-password" type="password" class="form-control" autocomplete="new-password" @bind-Value="request.NewPassword" />
+        <ValidationMessage For="@(() => request.NewPassword)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="confirm-password">Confirm new password</label>
+        <InputText id="confirm-password" type="password" class="form-control" autocomplete="new-password" @bind-Value="request.ConfirmPassword" />
+        <ValidationMessage For="@(() => request.ConfirmPassword)" />
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(error))
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(message))
+    {
+        <div class="alert alert-success" role="alert">@message</div>
+    }
+
+    <button class="btn btn-primary" type="submit" disabled="@busy">
+        @(busy ? "Updating..." : "Update password")
+    </button>
+</EditForm>
+
+<hr />
+
+<button class="btn btn-outline-secondary" type="button" @onclick="SignOut">Sign out</button>
+
 <Beam.Animation.AnimatedBeam />
 
 @code{
-    private string name = "";
+    private ChangePasswordRequest request = new ChangePasswordRequest();
+    private string? error;
+    private string? message;
+    private bool busy;
 
-    protected override void OnInitialized()
+    async Task ChangePassword()
     {
-        name = data.CurrentUser.Name;
+        busy = true;
+        error = null;
+        message = null;
+
+        try
+        {
+            var result = await auth.ChangePassword(request);
+
+            if (!result.Succeeded)
+            {
+                error = result.Error;
+                return;
+            }
+
+            request = new ChangePasswordRequest();
+            message = "Your password has been updated.";
+        }
+        finally
+        {
+            busy = false;
+        }
     }
-    async Task UpdateUser()
+
+    async Task SignOut()
     {
-        await data.GetOrCreateUser(name);
+        await auth.Logout();
+        navigation.NavigateTo("");
     }
 }

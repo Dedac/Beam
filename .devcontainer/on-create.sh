@@ -8,5 +8,19 @@ cd "$workspace_folder"
 dotnet restore
 dotnet tool restore
 cd Beam.Server
-dotnet ef database update
+
+for attempt in {1..30}; do
+    if dotnet ef database update; then
+        break
+    fi
+
+    if (( attempt == 30 )); then
+        echo "Database migration failed after 30 attempts." >&2
+        exit 1
+    fi
+
+    echo "SQL Server is not ready; retrying migration in 2 seconds..."
+    sleep 2
+done
+
 dotnet dev-certs https
